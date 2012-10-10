@@ -5,41 +5,44 @@
 #include<QPixmap>
 #include<QImage>
 #include<QDesktopWidget>
+#include<QGraphicsScene>
+#include<QGraphicsView>
+#include<QGraphicsPixmapItem>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
     //set up main window
-    MainWindow mainWindow;
-    mainWindow.setOrientation(MainWindow::ScreenOrientationLockPortrait);
-    mainWindow.showExpanded();
-
     QDesktopWidget *desktop = QApplication::desktop();
     int screenWidth = desktop->width();
-    //int screenHeight = desktop->height();
+    int screenHeight = desktop->height();
+    MainWindow mainWindow;
+    mainWindow.setOrientation(MainWindow::ScreenOrientationLockPortrait);
+    mainWindow.resize(screenWidth, screenHeight);
+    mainWindow.showExpanded();
 
-    //QLabel *imageLabel = new QLabel(&mainWindow);
+    QGraphicsScene *gScene = new QGraphicsScene(&mainWindow);
+    QGraphicsView *gView = new QGraphicsView(gScene);
+    gScene->setBackgroundBrush(Qt::black);
+
     QImage elephant(":/elephant.gif");
-
     elephant = elephant.scaledToWidth(screenWidth);
     int eWidth = elephant.width();
     int eHeight = elephant.height();
+
+    //gScene->addPixmap(QPixmap::fromImage(elephant));
 
     for(int i = 0; i < 5; i++)
     {
         for(int j = 0; j < 5; j++)
         {
-            QLabel *imageLabel = new QLabel(&mainWindow);
-            imageLabel->setPixmap(QPixmap::fromImage(elephant.copy(i*(eWidth/5), j*(eHeight/5), (i+1)*(eWidth/5), (j+1)*(eHeight/5))));
-            imageLabel->resize(eWidth, eHeight);
-            imageLabel->show();
+
+           QGraphicsPixmapItem *item = gScene->addPixmap(QPixmap::fromImage(elephant.copy(i*(eWidth/5), j*(eHeight/5), eWidth/5, eHeight/5)));
+           item->setPos(eWidth/5 *i, eHeight/5 *j);
+           item->setScale(0.99);
         }
     }
-
-    //imageLabel->setPixmap(QPixmap::fromImage(elephant));
-   // imageLabel->resize(elephant.width(), elephant.height());
-   // imageLabel->show();
-
+    gView->show();
     return app.exec();
 }
