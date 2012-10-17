@@ -35,8 +35,9 @@ int main(int argc, char *argv[])
 
     //gScene->addPixmap(QPixmap::fromImage(elephant));
 
-    QGraphicsItem *item[5][5];
+
     int grid = 5;
+    QGraphicsItem *item[grid][grid];
 
     //cut image into tiles and position them
     for(int i = 0; i < grid; i++)
