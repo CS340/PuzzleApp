@@ -10,6 +10,8 @@
 #include<QGraphicsView>
 #include<QGraphicsPixmapItem>
 #include<QImageReader>
+#include<QPushButton>
+#include<QIcon>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -32,29 +34,41 @@ void MainWindow::display(int screenWidth, int screenHeight)
 
     //import image
     QImageReader reader(":/elephant.gif");
-    int eWidth = reader.size().height();
-    int eHeight = reader.size().width();
-
+    reader.setScaledSize(QSize(screenWidth, screenWidth));
     QImage elephant = reader.read();
-    elephant.scaledToWidth(screenWidth);
-    eWidth = elephant.height();
-    eHeight = elephant.width();
+    int eWidth = elephant.height();
+    int eHeight = elephant.width();
 
+    int grid = 5;
+    QPushButton *buttons[grid][grid];
 
+    /*QPixmap pixmap = QPixmap::fromImage(elephant);
+    QIcon icon(pixmap);
+
+    QPushButton *button = new QPushButton(icon,"",gView);
+    button->setGeometry(0,0,eWidth,eHeight);
+    button->setIconSize(QSize(eWidth, eHeight));*/
 
     //cut image into tiles and position them
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < grid; i++)
     {
-        for(int j = 0; j < 5; j++)
+        for(int j = 0; j < grid; j++)
         {
-           QGraphicsPixmapItem *item = gScene->addPixmap(QPixmap::fromImage(elephant.copy(i*(eWidth/5), j*(eHeight/5), eWidth/5, eHeight/5)));
-           item->setPos(eWidth/5 *i, eHeight/5 *j);
-           item->setScale(0.99);
+            if(!(i==grid-1 && j==grid-1)){
+                QPixmap pixmap = QPixmap::fromImage(elephant.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
+                QIcon icon(pixmap);
+
+                buttons[i][j] = new QPushButton(icon,"",gView);
+                buttons[i][j]->setGeometry(eWidth/grid *i, eHeight/grid *j, eWidth/grid-1, eHeight/grid-1);
+                buttons[i][j]->setIconSize(QSize(eWidth/grid, eHeight/grid));
+            }
         }
     }
 
+
     gView->show();
 }
+
 
 void MainWindow::setOrientation(ScreenOrientation orientation)
 {
