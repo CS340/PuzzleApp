@@ -37,16 +37,17 @@ void MainWindow::display(int screenWidth, int screenHeight)
     int eWidth = elephant.height();
     int eHeight = elephant.width();
 
-
+    int grid = 5;
+    QGraphicsPixmapItem *items[grid][grid];
 
     //cut image into tiles and position them
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < grid; i++)
     {
-        for(int j = 0; j < 5; j++)
+        for(int j = 0; j < grid; j++)
         {
-           QGraphicsPixmapItem *item = gScene->addPixmap(QPixmap::fromImage(elephant.copy(i*(eWidth/5), j*(eHeight/5), eWidth/5, eHeight/5)));
-           item->setPos(eWidth/5 *i, eHeight/5 *j);
-           item->setScale(0.99);
+           items[i][j] = gScene->addPixmap(QPixmap::fromImage(elephant.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid)));
+           items[i][j]->setPos(eWidth/grid *i, eHeight/grid *j);
+           items[i][j]->setScale(0.99);
         }
     }
 
