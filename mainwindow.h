@@ -20,6 +20,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     virtual ~MainWindow();
 
+    void display(int screenWidth, int screenHeight);
+
     // Note that this will only have an effect on Fremantle.
     void setOrientation(ScreenOrientation orientation);
 

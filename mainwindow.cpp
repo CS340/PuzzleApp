@@ -2,16 +2,58 @@
 #include "ui_mainwindow.h"
 
 #include <QCoreApplication>
+#include<QLabel>
+#include<QPixmap>
+#include<QImage>
+#include<QDesktopWidget>
+#include<QGraphicsScene>
+#include<QGraphicsView>
+#include<QGraphicsPixmapItem>
+#include<QImageReader>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::display(int screenWidth, int screenHeight)
+{
+    //set up scene and view
+    QGraphicsScene *gScene = new QGraphicsScene(this);
+    QGraphicsView *gView = new QGraphicsView(gScene);
+    gScene->setBackgroundBrush(Qt::black);
+
+    //import image
+    QImageReader reader(":/elephant.gif");
+    int eWidth = reader.size().height();
+    int eHeight = reader.size().width();
+
+    QImage elephant = reader.read();
+    elephant.scaledToWidth(screenWidth);
+    eWidth = elephant.height();
+    eHeight = elephant.width();
+
+
+
+    //cut image into tiles and position them
+    for(int i = 0; i < 5; i++)
+    {
+        for(int j = 0; j < 5; j++)
+        {
+           QGraphicsPixmapItem *item = gScene->addPixmap(QPixmap::fromImage(elephant.copy(i*(eWidth/5), j*(eHeight/5), eWidth/5, eHeight/5)));
+           item->setPos(eWidth/5 *i, eHeight/5 *j);
+           item->setScale(0.99);
+        }
+    }
+
+    gView->show();
 }
 
 void MainWindow::setOrientation(ScreenOrientation orientation)
