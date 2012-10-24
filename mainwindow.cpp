@@ -39,15 +39,15 @@ void MainWindow::display(int screenWidth, int screenHeight)
     int eWidth = elephant.height();
     int eHeight = elephant.width();
 
-    int grid = 5;
-    QPushButton *buttons[grid][grid];
-
     /*QPixmap pixmap = QPixmap::fromImage(elephant);
     QIcon icon(pixmap);
 
     QPushButton *button = new QPushButton(icon,"",gView);
     button->setGeometry(0,0,eWidth,eHeight);
     button->setIconSize(QSize(eWidth, eHeight));*/
+
+    int grid = 5;
+    QPushButton *buttons[grid][grid];
 
     //cut image into tiles and position them
     for(int i = 0; i < grid; i++)
@@ -62,6 +62,7 @@ void MainWindow::display(int screenWidth, int screenHeight)
                 buttons[i][j]->setGeometry(eWidth/grid *i, eHeight/grid *j, eWidth/grid-1, eHeight/grid-1);
                 buttons[i][j]->setIconSize(QSize(eWidth/grid, eHeight/grid));
             }
+
         }
     }
 
