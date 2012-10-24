@@ -32,13 +32,10 @@ void MainWindow::display(int screenWidth, int screenHeight)
 
     //import image
     QImageReader reader(":/elephant.gif");
-    int eWidth = reader.size().height();
-    int eHeight = reader.size().width();
-
+    reader.setScaledSize(QSize(screenWidth, screenWidth));
     QImage elephant = reader.read();
-    elephant.scaledToWidth(screenWidth);
-    eWidth = elephant.height();
-    eHeight = elephant.width();
+    int eWidth = elephant.height();
+    int eHeight = elephant.width();
 
 
 
