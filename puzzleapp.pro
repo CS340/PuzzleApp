@@ -10,8 +10,10 @@ DEPLOYMENTFOLDERS = # file1 dir1
 # CONFIG += mobility
 # MOBILITY +=
 
-SOURCES += main.cpp mainwindow.cpp
-HEADERS += mainwindow.h
+SOURCES += main.cpp mainwindow.cpp \
+    tile.cpp
+HEADERS += mainwindow.h \
+    tile.h
 FORMS += mainwindow.ui
 
 # Please do not modify the following two lines. Required for deployment.

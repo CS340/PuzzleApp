@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "tile.h"
 
 #include <QCoreApplication>
 #include<QLabel>
@@ -29,8 +30,8 @@ void MainWindow::display(int screenWidth, int screenHeight)
 {
     //set up scene and view
     QGraphicsScene *gScene = new QGraphicsScene(this);
-    QGraphicsView *gView = new QGraphicsView(gScene);
-    gScene->setBackgroundBrush(Qt::black);
+    gView = new QGraphicsView(gScene);
+    gView->setBackgroundBrush(Qt::black);
 
     //import image
     QImageReader reader(":/elephant.gif");
@@ -39,15 +40,11 @@ void MainWindow::display(int screenWidth, int screenHeight)
     int eWidth = elephant.height();
     int eHeight = elephant.width();
 
-    /*QPixmap pixmap = QPixmap::fromImage(elephant);
-    QIcon icon(pixmap);
-
-    QPushButton *button = new QPushButton(icon,"",gView);
-    button->setGeometry(0,0,eWidth,eHeight);
-    button->setIconSize(QSize(eWidth, eHeight));*/
-
     int grid = 5;
-    QPushButton *buttons[grid][grid];
+    Tile *buttons[grid][grid];
+
+    int hiddenX = grid;
+    int hiddenY = grid;
 
     //cut image into tiles and position them
     for(int i = 0; i < grid; i++)
@@ -58,16 +55,44 @@ void MainWindow::display(int screenWidth, int screenHeight)
                 QPixmap pixmap = QPixmap::fromImage(elephant.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
                 QIcon icon(pixmap);
 
-                buttons[i][j] = new QPushButton(icon,"",gView);
+                buttons[i][j] = new Tile(i, j, icon,gView);
                 buttons[i][j]->setGeometry(eWidth/grid *i, eHeight/grid *j, eWidth/grid-1, eHeight/grid-1);
                 buttons[i][j]->setIconSize(QSize(eWidth/grid, eHeight/grid));
+
+                connect(buttons[i][j], SIGNAL(buttonClicked(QPushButton* button)), this, SLOT(handlebutton(QPushButton* button)));
             }
 
         }
     }
 
-
     gView->show();
+}
+
+int *MainWindow::findHiddenTile(int x, int y, int hiddenX, int hiddenY)
+{
+   /* int *ans = new int[2];
+    if(buttons[x+1][y] == 0){
+        ans[0] = x+1;
+        ans[1] = y;
+    }
+    else{
+        ans[0] = -1;
+        ans[1] = -1;
+    }
+    */
+
+    //return ans;
+}
+
+void MainWindow::handlebutton(QPushButton *button)
+{
+
+    button->setVisible(false);
+
+    QLabel label(this->gView);
+    label.move(0,500);
+    label.setText("buttons");
+    label.show();
 }
 
 
