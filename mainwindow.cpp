@@ -7,11 +7,12 @@
 #include <QGridLayout>
 #include <QGraphicsView>
 
+QLabel *label;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    label = new QLabel();
 }
 
 MainWindow::~MainWindow()
@@ -95,11 +96,10 @@ void MainWindow::display(int screenWidth, int screenHeight)
     return ans;
 }*/
 
-void MainWindow::handleTileClick(Tile*)
+void MainWindow::handleTileClick(Tile* t)
 {
     qDebug("MAIN_WINDOW_TILE_CLICK");
-    QLabel *label = new QLabel();
-    label->setText("LABEL");
+    label->setText("(LABEL)");
     menuGrid->addWidget(label, 0,0);
 }
 

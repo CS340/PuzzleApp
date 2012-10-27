@@ -12,6 +12,10 @@ public:
     explicit Tile(int x, int y, const QIcon & icon, QWidget *parent = 0);
     explicit Tile();
     virtual ~Tile();
+    int getX();
+    int getY();
+    void setX(int x);
+    void setY(int y);
 
 private:
     int x;
