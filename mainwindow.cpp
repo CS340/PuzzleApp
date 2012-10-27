@@ -59,7 +59,7 @@ void MainWindow::display(int screenWidth, int screenHeight)
                 button->setIconSize(QSize(eWidth/grid, eHeight/grid));
 
                 playGrid->addWidget(button, j, i);
-                connect(button, SIGNAL(Tile::tileClicked(Tile*)), this, SLOT(handleTileClick(Tile*)));
+                connect(button, SIGNAL(tileClicked(Tile*)), this, SLOT(handleTileClick(Tile*)));
             }
         }
     }
