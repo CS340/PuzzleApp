@@ -3,17 +3,18 @@
 #include "tile.h"
 
 #include <QCoreApplication>
-#include<QLabel>
-#include<QPixmap>
-#include<QImage>
-#include<QDesktopWidget>
-#include<QGraphicsScene>
-#include<QGraphicsView>
-#include<QGraphicsPixmapItem>
-#include<QImageReader>
-#include<QPushButton>
-#include<QIcon>
-
+#include <QLabel>
+#include <QPixmap>
+#include <QImage>
+#include <QDesktopWidget>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
+#include <QImageReader>
+#include <QPushButton>
+#include <QIcon>
+#include <QMessageBox>
+#include <QGridLayout>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -28,49 +29,65 @@ MainWindow::~MainWindow()
 
 void MainWindow::display(int screenWidth, int screenHeight)
 {
+    int grid = 5;
+
     //set up scene and view
     QGraphicsScene *gScene = new QGraphicsScene(this);
     gView = new QGraphicsView(gScene);
-    gView->setBackgroundBrush(Qt::black);
+    gView->setFixedSize(screenWidth, screenHeight);
+    gScene->setBackgroundBrush(Qt::black);
+
+    //set up all GridLayouts
+    QGridLayout *layout = new QGridLayout(gView);
+    QGridLayout *playGrid = new QGridLayout();
+    QGridLayout *menuGrid = new QGridLayout();
+    layout->setContentsMargins(0,0,0,0);
+    playGrid->setContentsMargins(0,0,0,0);
+    menuGrid->setContentsMargins(0,0,0,0);
+    gView->setLayout(layout);
+    layout->addLayout(playGrid, 0, 0);
+    layout->addLayout(menuGrid, 1, 0);
+
 
     //import image
     QImageReader reader(":/elephant.gif");
     reader.setScaledSize(QSize(screenWidth, screenWidth));
     QImage elephant = reader.read();
-    int eWidth = elephant.height();
-    int eHeight = elephant.width();
-
-    int grid = 5;
-    Tile *buttons[grid][grid];
-
-    int hiddenX = grid;
-    int hiddenY = grid;
+    int eHeight = elephant.height();
+    int eWidth = elephant.width();
 
     //cut image into tiles and position them
-    for(int i = 0; i < grid; i++)
-    {
-        for(int j = 0; j < grid; j++)
-        {
+    for(int i = 0; i < grid; i++){
+        for(int j = 0; j < grid; j++){
             if(!(i==grid-1 && j==grid-1)){
                 QPixmap pixmap = QPixmap::fromImage(elephant.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
                 QIcon icon(pixmap);
+                Tile *button = new Tile(i, j, icon);
 
-                buttons[i][j] = new Tile(i, j, icon,gView);
-                buttons[i][j]->setGeometry(eWidth/grid *i, eHeight/grid *j, eWidth/grid-1, eHeight/grid-1);
-                buttons[i][j]->setIconSize(QSize(eWidth/grid, eHeight/grid));
+                button->setIconSize(QSize(eWidth/grid, eHeight/grid));
+                playGrid->addWidget(button, j, i);
 
-                connect(buttons[i][j], SIGNAL(buttonClicked(QPushButton* button)), this, SLOT(handlebutton(QPushButton* button)));
+                //QObject::connect(buttons[i][j], SIGNAL(clicked()), gView, SLOT(handlebutton(buttons[i][j])));
             }
-
         }
+    }
+
+    for(int i=0; i<layout->columnCount(); i++)
+        layout->setColumnMinimumWidth(i, screenWidth);
+
+    layout->setRowMinimumHeight(1, screenHeight-screenWidth);
+
+    for(int i=0; i<playGrid->rowCount(); i++){
+        playGrid->setColumnMinimumWidth(i, screenWidth/grid);
+        playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
 
     gView->show();
 }
 
-int *MainWindow::findHiddenTile(int x, int y, int hiddenX, int hiddenY)
+/*int *MainWindow::findHiddenTile(int x, int y, int hiddenX, int hiddenY)
 {
-   /* int *ans = new int[2];
+    int *ans = new int[2];
     if(buttons[x+1][y] == 0){
         ans[0] = x+1;
         ans[1] = y;
@@ -79,20 +96,22 @@ int *MainWindow::findHiddenTile(int x, int y, int hiddenX, int hiddenY)
         ans[0] = -1;
         ans[1] = -1;
     }
-    */
 
-    //return ans;
-}
+
+    return ans;
+}*/
 
 void MainWindow::handlebutton(QPushButton *button)
 {
-
+    QMessageBox* msgBox = new QMessageBox();
+    msgBox->setWindowTitle("Hello");
     button->setVisible(false);
 
-    QLabel label(this->gView);
-    label.move(0,500);
-    label.setText("buttons");
-    label.show();
+    QLabel *label = new QLabel(this->gView);
+    label->move(0,500);
+    label->setText("buttons");
+    label->show();
+    this->update();
 }
 
 
