@@ -74,7 +74,7 @@ void MainWindow::display(int screenWidth, int screenHeight)
         playGrid->setColumnMinimumWidth(i, screenWidth/grid);
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
-    qDebug("debug test");
+    qDebug("MAIN_WINDOW");
 
     gView->show();
 }
@@ -97,18 +97,10 @@ void MainWindow::display(int screenWidth, int screenHeight)
 
 void MainWindow::handleTileClick(Tile*)
 {
-    qDebug("YOU PUSHED A BUTTON");
+    qDebug("MAIN_WINDOW_TILE_CLICK");
     QLabel *label = new QLabel();
-    label->setText("buttons");
+    label->setText("LABEL");
     menuGrid->addWidget(label, 0,0);
-
-    menuGrid->update();
-    layout->update();
-    gView->update();
-    gView->repaint();
-    this->update();
-    this->repaint();
-    qApp->processEvents();
 }
 
 

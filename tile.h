@@ -6,6 +6,8 @@
 class Tile : public QPushButton
 {
 
+Q_OBJECT
+
 public:
     explicit Tile(int x, int y, const QIcon & icon, QWidget *parent = 0);
     explicit Tile();
@@ -22,6 +24,7 @@ signals:
 
 private slots:
     void onClick(){
+        qDebug("TILE_CLICK");
         emit tileClicked(this);
     }
 };
