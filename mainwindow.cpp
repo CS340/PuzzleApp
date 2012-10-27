@@ -2,19 +2,10 @@
 #include "ui_mainwindow.h"
 #include "tile.h"
 
-#include <QCoreApplication>
 #include <QLabel>
-#include <QPixmap>
-#include <QImage>
-#include <QDesktopWidget>
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <QGraphicsPixmapItem>
 #include <QImageReader>
-#include <QPushButton>
-#include <QIcon>
-#include <QMessageBox>
 #include <QGridLayout>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -67,11 +58,12 @@ void MainWindow::display(int screenWidth, int screenHeight)
                 button->setIconSize(QSize(eWidth/grid, eHeight/grid));
                 playGrid->addWidget(button, j, i);
 
-                //QObject::connect(buttons[i][j], SIGNAL(clicked()), gView, SLOT(handlebutton(buttons[i][j])));
+                connect(button, SIGNAL(clicked()), this, SLOT(handlebutton(button)));
             }
         }
     }
 
+    //grid sizing
     for(int i=0; i<layout->columnCount(); i++)
         layout->setColumnMinimumWidth(i, screenWidth);
 
@@ -103,10 +95,6 @@ void MainWindow::display(int screenWidth, int screenHeight)
 
 void MainWindow::handlebutton(QPushButton *button)
 {
-    QMessageBox* msgBox = new QMessageBox();
-    msgBox->setWindowTitle("Hello");
-    button->setVisible(false);
-
     QLabel *label = new QLabel(this->gView);
     label->move(0,500);
     label->setText("buttons");
