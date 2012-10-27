@@ -1,14 +1,14 @@
 #include "mainwindow.h"
 
 #include <QApplication>
-#include<QLabel>
-#include<QPixmap>
-#include<QImage>
+//#include<QLabel>
+//#include<QPixmap>
+//#include<QImage>
 #include<QDesktopWidget>
-#include<QGraphicsScene>
-#include<QGraphicsView>
-#include<QGraphicsPixmapItem>
-#include<QImageReader>
+//#include<QGraphicsScene>
+//#include<QGraphicsView>
+//#include<QGraphicsPixmapItem>
+//#include<QImageReader>
 
 
 int main(int argc, char *argv[])

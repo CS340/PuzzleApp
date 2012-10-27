@@ -7,12 +7,10 @@
 #include <QGridLayout>
 #include <QGraphicsView>
 
-QLabel *label;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    label = new QLabel();
 }
 
 MainWindow::~MainWindow()
@@ -120,9 +118,7 @@ void MainWindow::swapTiles(Tile *tile1, Tile *tile2){
 
 void MainWindow::handleTileClick(Tile* t)
 {
-    qDebug("MAIN_WINDOW_TILE_CLICK");
-    label->setText("(LABEL)");
-    menuGrid->addWidget(label, 0,0);
+
 }
 
 
