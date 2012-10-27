@@ -7,11 +7,12 @@
 #include <QGridLayout>
 #include <QGraphicsView>
 
+QLabel *label;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    label = new QLabel();
 }
 
 MainWindow::~MainWindow()
@@ -83,6 +84,8 @@ void MainWindow::display(int screenWidth, int screenHeight)
 
     swapTiles(0,0,4,4);
 
+    qDebug("MAIN_WINDOW");
+
     gView->show();
 }
 
@@ -102,6 +105,7 @@ void MainWindow::display(int screenWidth, int screenHeight)
     return ans;
 }*/
 
+
 void MainWindow::swapTiles(int x1, int y1, int x2, int y2){
     QWidget *tile1 = playGrid->itemAtPosition(y1, x1)->widget();
     QWidget *tile2 = playGrid->itemAtPosition(y2, x2)->widget();
@@ -113,20 +117,12 @@ void MainWindow::swapTiles(int x1, int y1, int x2, int y2){
     playGrid->addWidget(tile2, y1, x1);
 }
 
-void MainWindow::handleTileClick(Tile*)
-{
-    qDebug("YOU PUSHED A BUTTON");
-    QLabel *label = new QLabel();
-    label->setText("buttons");
-    menuGrid->addWidget(label, 0,0);
 
-    menuGrid->update();
-    layout->update();
-    gView->update();
-    gView->repaint();
-    this->update();
-    this->repaint();
-    qApp->processEvents();
+void MainWindow::handleTileClick(Tile* t)
+{
+    qDebug("MAIN_WINDOW_TILE_CLICK");
+    label->setText("(LABEL)");
+    menuGrid->addWidget(label, 0,0);
 }
 
 
