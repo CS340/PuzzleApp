@@ -55,14 +55,20 @@ void MainWindow::display(int screenWidth, int screenHeight)
                 QPixmap pixmap = QPixmap::fromImage(elephant.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
                 QIcon icon(pixmap);
                 Tile *button = new Tile(i, j, icon);
-
                 button->setIconSize(QSize(eWidth/grid, eHeight/grid));
-                playGrid->addWidget(button, j, i);
 
-                connect(button, SIGNAL(tileClicked(Tile*)), this, SLOT(handleTileClick(Tile*)));
+                playGrid->addWidget(button, j, i);
+                connect(button, SIGNAL(Tile::tileClicked(Tile*)), this, SLOT(handleTileClick(Tile*)));
             }
         }
     }
+
+    //make hidden tile
+    reader.setFileName(":/black.png");
+    QIcon black(QPixmap::fromImage(reader.read()));
+    Tile *hiddenTile = new Tile(grid-1, grid-1, black);
+    hiddenTile->setIconSize(QSize(eWidth/grid, eHeight/grid));
+    playGrid->addWidget(hiddenTile, grid-1, grid-1);
 
     //grid sizing
     for(int i=0; i<layout->columnCount(); i++)
@@ -74,7 +80,8 @@ void MainWindow::display(int screenWidth, int screenHeight)
         playGrid->setColumnMinimumWidth(i, screenWidth/grid);
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
-    qDebug("debug test");
+
+    swapTiles(0,0,4,4);
 
     gView->show();
 }
@@ -94,6 +101,17 @@ void MainWindow::display(int screenWidth, int screenHeight)
 
     return ans;
 }*/
+
+void MainWindow::swapTiles(int x1, int y1, int x2, int y2){
+    QWidget *tile1 = playGrid->itemAtPosition(y1, x1)->widget();
+    QWidget *tile2 = playGrid->itemAtPosition(y2, x2)->widget();
+
+    playGrid->removeWidget(tile1);
+    playGrid->removeWidget(tile2);
+
+    playGrid->addWidget(tile1, y2, x2);
+    playGrid->addWidget(tile2, y1, x1);
+}
 
 void MainWindow::handleTileClick(Tile*)
 {

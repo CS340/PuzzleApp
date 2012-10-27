@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>elephant.gif</file>
+        <file>black.png</file>
     </qresource>
 </RCC>

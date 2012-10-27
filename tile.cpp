@@ -16,7 +16,3 @@ Tile::~Tile()
 {
 
 }
-
-/*void Tile::onClick(){
-    emit tileClicked(this);
-}*/

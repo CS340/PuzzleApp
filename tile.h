@@ -22,7 +22,7 @@ signals:
 
 private slots:
     void onClick(){
-        emit tileClicked(this);
+        emit this->tileClicked(this);
     }
 };
 
