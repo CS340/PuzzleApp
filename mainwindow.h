@@ -34,7 +34,7 @@ public:
 
 private:
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
-    void swapTiles(int x1, int y1, int x2, int y2);
+    void swapTiles(Tile *tile1, Tile *tile2);
 
     QGraphicsView *gView;
     QGridLayout *layout;

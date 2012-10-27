@@ -82,8 +82,6 @@ void MainWindow::display(int screenWidth, int screenHeight)
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
 
-    swapTiles(0,0,4,4);
-
     qDebug("MAIN_WINDOW");
 
     gView->show();
@@ -106,15 +104,17 @@ void MainWindow::display(int screenWidth, int screenHeight)
 }*/
 
 
-void MainWindow::swapTiles(int x1, int y1, int x2, int y2){
-    QWidget *tile1 = playGrid->itemAtPosition(y1, x1)->widget();
-    QWidget *tile2 = playGrid->itemAtPosition(y2, x2)->widget();
-
+void MainWindow::swapTiles(Tile *tile1, Tile *tile2){
     playGrid->removeWidget(tile1);
     playGrid->removeWidget(tile2);
 
-    playGrid->addWidget(tile1, y2, x2);
-    playGrid->addWidget(tile2, y1, x1);
+    playGrid->addWidget(tile1, tile2->getY(), tile2->getX());
+    playGrid->addWidget(tile2, tile1->getY(), tile1->getX());
+
+    tile1->setX(tile2->getX());
+    tile1->setY(tile2->getY());
+    tile2->setX(tile1->getX());
+    tile2->setY(tile1->getY());
 }
 
 
