@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QImageReader>
 #include <QGridLayout>
+#include <QGraphicsView>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -29,9 +30,9 @@ void MainWindow::display(int screenWidth, int screenHeight)
     gScene->setBackgroundBrush(Qt::black);
 
     //set up all GridLayouts
-    QGridLayout *layout = new QGridLayout(gView);
-    QGridLayout *playGrid = new QGridLayout();
-    QGridLayout *menuGrid = new QGridLayout();
+    layout = new QGridLayout(gView);
+    playGrid = new QGridLayout();
+    menuGrid = new QGridLayout();
     layout->setContentsMargins(0,0,0,0);
     playGrid->setContentsMargins(0,0,0,0);
     menuGrid->setContentsMargins(0,0,0,0);
@@ -58,7 +59,7 @@ void MainWindow::display(int screenWidth, int screenHeight)
                 button->setIconSize(QSize(eWidth/grid, eHeight/grid));
                 playGrid->addWidget(button, j, i);
 
-                connect(button, SIGNAL(clicked()), this, SLOT(handlebutton(button)));
+                connect(button, SIGNAL(tileClicked(Tile*)), this, SLOT(handleTileClick(Tile*)));
             }
         }
     }
@@ -73,6 +74,7 @@ void MainWindow::display(int screenWidth, int screenHeight)
         playGrid->setColumnMinimumWidth(i, screenWidth/grid);
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
+    qDebug("debug test");
 
     gView->show();
 }
@@ -93,13 +95,20 @@ void MainWindow::display(int screenWidth, int screenHeight)
     return ans;
 }*/
 
-void MainWindow::handlebutton(QPushButton *button)
+void MainWindow::handleTileClick(Tile*)
 {
-    QLabel *label = new QLabel(this->gView);
-    label->move(0,500);
+    qDebug("YOU PUSHED A BUTTON");
+    QLabel *label = new QLabel();
     label->setText("buttons");
-    label->show();
+    menuGrid->addWidget(label, 0,0);
+
+    menuGrid->update();
+    layout->update();
+    gView->update();
+    gView->repaint();
     this->update();
+    this->repaint();
+    qApp->processEvents();
 }
 
 

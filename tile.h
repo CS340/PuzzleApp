@@ -18,7 +18,12 @@ private:
     int height;
 
 signals:
-    void buttonClicked(QPushButton *button);
+    void tileClicked(Tile*);
+
+private slots:
+    void onClick(){
+        emit tileClicked(this);
+    }
 };
 
 #endif // TILE_H

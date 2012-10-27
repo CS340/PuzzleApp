@@ -4,6 +4,7 @@ Tile::Tile(int x, int y, const QIcon & icon, QWidget * parent) : QPushButton(ico
 {
     this->x = x;
     this->y = y;
+    connect(this, SIGNAL(clicked()), this, SLOT(onClick()));
 }
 
 Tile::Tile()
@@ -15,3 +16,7 @@ Tile::~Tile()
 {
 
 }
+
+/*void Tile::onClick(){
+    emit tileClicked(this);
+}*/

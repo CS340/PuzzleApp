@@ -1,9 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "tile.h"
+
 #include <QMainWindow>
 #include <QPushButton>
 #include <QGraphicsView>
+#include <QGridLayout>
 
 namespace Ui {
     class MainWindow;
@@ -32,10 +35,13 @@ public:
 private:
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
     QGraphicsView *gView;
+    QGridLayout *layout;
+    QGridLayout *playGrid;
+    QGridLayout *menuGrid;
     Ui::MainWindow *ui;
 
 private slots:
-    void handlebutton(QPushButton* button);
+    void handleTileClick(Tile*);
 };
 
 #endif // MAINWINDOW_H
