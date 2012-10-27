@@ -7,12 +7,10 @@
 #include <QGridLayout>
 #include <QGraphicsView>
 
-QLabel *label;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    label = new QLabel();
 }
 
 MainWindow::~MainWindow()
@@ -67,7 +65,7 @@ void MainWindow::display(int screenWidth, int screenHeight)
     //make hidden tile
     reader.setFileName(":/black.png");
     QIcon black(QPixmap::fromImage(reader.read()));
-    Tile *hiddenTile = new Tile(grid-1, grid-1, black);
+    hiddenTile = new Tile(grid-1, grid-1, black);
     hiddenTile->setIconSize(QSize(eWidth/grid, eHeight/grid));
     playGrid->addWidget(hiddenTile, grid-1, grid-1);
 
@@ -103,7 +101,6 @@ void MainWindow::display(int screenWidth, int screenHeight)
     return ans;
 }*/
 
-
 void MainWindow::swapTiles(Tile *tile1, Tile *tile2){
     playGrid->removeWidget(tile1);
     playGrid->removeWidget(tile2);
@@ -111,18 +108,23 @@ void MainWindow::swapTiles(Tile *tile1, Tile *tile2){
     playGrid->addWidget(tile1, tile2->getY(), tile2->getX());
     playGrid->addWidget(tile2, tile1->getY(), tile1->getX());
 
+    int tmpx = tile1->getX();
+    int tmpy = tile1->getY();
+
     tile1->setX(tile2->getX());
     tile1->setY(tile2->getY());
-    tile2->setX(tile1->getX());
-    tile2->setY(tile1->getY());
+    tile2->setX(tmpx);
+    tile2->setY(tmpy);
 }
 
 
 void MainWindow::handleTileClick(Tile* t)
 {
     qDebug("MAIN_WINDOW_TILE_CLICK");
-    label->setText("(LABEL)");
-    menuGrid->addWidget(label, 0,0);
+    if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
+    {
+        swapTiles(t,hiddenTile);
+    }
 }
 
 

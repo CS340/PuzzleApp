@@ -41,6 +41,7 @@ private:
     QGridLayout *playGrid;
     QGridLayout *menuGrid;
     Ui::MainWindow *ui;
+    Tile *hiddenTile;
 
 private slots:
     void handleTileClick(Tile*);
