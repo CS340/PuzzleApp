@@ -28,13 +28,13 @@ int Tile::getY()
     return this->y;
 }
 
-void Tile::setX(int x)
+void Tile::setX(int a)
 {
-    this->x = x;
+    this->x = a;
 }
 
-void Tile::setY(int y)
+void Tile::setY(int a)
 {
-    this->y = y;
+    this->y = a;
 }
 

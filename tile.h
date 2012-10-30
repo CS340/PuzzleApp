@@ -14,8 +14,8 @@ public:
     virtual ~Tile();
     int getX();
     int getY();
-    void setX(int x);
-    void setY(int y);
+    void setX(int a);
+    void setY(int a);
 
 private:
     int x;

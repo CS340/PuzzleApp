@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    numMoves = 0;
 }
 
 MainWindow::~MainWindow()
@@ -38,6 +39,9 @@ void MainWindow::display(int screenWidth, int screenHeight)
     gView->setLayout(layout);
     layout->addLayout(playGrid, 0, 0);
     layout->addLayout(menuGrid, 1, 0);
+
+    movesLabel = new QLabel(QString::number(numMoves));
+    menuGrid->addWidget(movesLabel,0,0,1,1);
 
 
     //import image
@@ -80,26 +84,38 @@ void MainWindow::display(int screenWidth, int screenHeight)
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
 
-    qDebug("MAIN_WINDOW");
 
+    shuffle(grid);
+    qDebug("Shuffled");
     gView->show();
+    qDebug("MAIN_WINDOW");
 }
 
-/*int *MainWindow::findHiddenTile(int x, int y, int hiddenX, int hiddenY)
+void MainWindow::shuffle(int grid)
 {
-    int *ans = new int[2];
-    if(buttons[x+1][y] == 0){
-        ans[0] = x+1;
-        ans[1] = y;
-    }
-    else{
-        ans[0] = -1;
-        ans[1] = -1;
-    }
+    for(int i = 0; i < grid - 1; i++)
+    {
+        for(int j = 0; j < grid - 1; j++)
+        {
+            if(!(i == grid - 1 && j == grid - 1))
+            {
+                int a = grid - 1;
+                int b = grid - 1;
 
+                while(a == grid - 1 && grid - 1)
+                {
+                    a = rand() % grid;
+                    b = rand() % grid;
+                }
 
-    return ans;
-}*/
+                Tile *g = dynamic_cast<Tile*>(playGrid->itemAtPosition(i,j)->widget());
+                Tile *h = dynamic_cast<Tile*>(playGrid->itemAtPosition(a,b)->widget());
+
+                swapTiles(g,h);
+            }
+        }
+    }
+}
 
 void MainWindow::swapTiles(Tile *tile1, Tile *tile2){
     playGrid->removeWidget(tile1);
@@ -123,7 +139,10 @@ void MainWindow::handleTileClick(Tile* t)
     qDebug("MAIN_WINDOW_TILE_CLICK");
     if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
     {
-        swapTiles(t,hiddenTile);
+        qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+        swapTiles(t, hiddenTile);
+        qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+        movesLabel->setText(QString::number(++numMoves));
     }
 }
 

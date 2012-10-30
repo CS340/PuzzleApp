@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QGraphicsView>
 #include <QGridLayout>
+#include <QLabel>
 
 namespace Ui {
     class MainWindow;
@@ -35,6 +36,7 @@ public:
 private:
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
     void swapTiles(Tile *tile1, Tile *tile2);
+    void shuffle(int grid);
 
     QGraphicsView *gView;
     QGridLayout *layout;
@@ -42,6 +44,8 @@ private:
     QGridLayout *menuGrid;
     Ui::MainWindow *ui;
     Tile *hiddenTile;
+    int numMoves;
+    QLabel *movesLabel;
 
 private slots:
     void handleTileClick(Tile*);
