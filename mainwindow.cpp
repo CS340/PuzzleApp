@@ -1,17 +1,20 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "tile.h"
+#include "timerthread.h"
 
 #include <QLabel>
 #include <QImageReader>
 #include <QGridLayout>
 #include <QGraphicsView>
+#include <QTimer>
+#include <math.h>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    numMoves = 0;
 }
 
 MainWindow::~MainWindow()
@@ -22,6 +25,8 @@ MainWindow::~MainWindow()
 void MainWindow::display(int screenWidth, int screenHeight)
 {
     int grid = 5;
+    numMoves = 0;
+    seconds = 0;
 
     //set up scene and view
     QGraphicsScene *gScene = new QGraphicsScene(this);
@@ -40,9 +45,11 @@ void MainWindow::display(int screenWidth, int screenHeight)
     layout->addLayout(playGrid, 0, 0);
     layout->addLayout(menuGrid, 1, 0);
 
-    movesLabel = new QLabel(QString::number(numMoves));
-    menuGrid->addWidget(movesLabel,0,0,1,1);
-
+    //timer and move labels
+    movesLabel = new QLabel("Number of moves: " + QString::number(numMoves));
+    menuGrid->addWidget(movesLabel,0,0);
+    timerLabel = new QLabel("Duration of game(m:s): 0:0");
+    menuGrid->addWidget(timerLabel,1,0);
 
     //import image
     QImageReader reader(":/elephant.gif");
@@ -87,8 +94,17 @@ void MainWindow::display(int screenWidth, int screenHeight)
 
     shuffle(grid);
     qDebug("Shuffled");
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(1000);
+
+    //screen switch testing//
+    test = new Tile("Test");
+    menuGrid->addWidget(test, 2, 0);
+    connect(test, SIGNAL(tileClicked(Tile*)), this, SLOT(handleTileClick(Tile*)));
+
     gView->show();
-    qDebug("MAIN_WINDOW");
 }
 
 void MainWindow::shuffle(int grid)
@@ -133,16 +149,28 @@ void MainWindow::swapTiles(Tile *tile1, Tile *tile2){
     tile2->setY(tmpy);
 }
 
+void MainWindow::update()
+{
+    int minutes = (++seconds) / 60;
+    timerLabel->setText("Duration of game(m:s): " + QString::number(minutes) + ":" + QString::number(seconds-(minutes*60)));
+}
 
 void MainWindow::handleTileClick(Tile* t)
 {
-    qDebug("MAIN_WINDOW_TILE_CLICK");
+    //TEST STUFF//
+    if(t==test)
+    {
+        //switch screens
+
+    }
+
     if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
     {
-        qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+        //qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
         swapTiles(t, hiddenTile);
-        qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
-        movesLabel->setText(QString::number(++numMoves));
+        //qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+        movesLabel->setText("Number of moves: " + QString::number(++numMoves));
+        qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
     }
 }
 

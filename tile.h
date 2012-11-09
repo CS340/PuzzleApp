@@ -10,6 +10,7 @@ Q_OBJECT
 
 public:
     explicit Tile(int x, int y, const QIcon & icon, QWidget *parent = 0);
+    explicit Tile(const QString &text);
     explicit Tile();
     virtual ~Tile();
     int getX();
@@ -28,7 +29,7 @@ signals:
 
 private slots:
     void onClick(){
-        qDebug("TILE_CLICK");
+        //qDebug("TILE_CLICK");
         emit tileClicked(this);
     }
 };

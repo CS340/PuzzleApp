@@ -11,9 +11,15 @@ CONFIG += console
 # MOBILITY +=
 
 SOURCES += main.cpp mainwindow.cpp \
-    tile.cpp
+    tile.cpp \
+    timerthread.cpp \
+	customImagMainWindow.cpp\
+	layoutholder.cpp
 HEADERS += mainwindow.h \
-    tile.h
+    tile.h \
+    timerthread.h \
+	customImagMainWindow.h\
+	layoutholder.h
 FORMS += mainwindow.ui
 
 # Please do not modify the following two lines. Required for deployment.
