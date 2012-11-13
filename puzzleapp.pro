@@ -12,14 +12,10 @@ CONFIG += console
 
 SOURCES += main.cpp mainwindow.cpp \
     tile.cpp \
-    timerthread.cpp \
-	customImagMainWindow.cpp\
-	layoutholder.cpp
+    timerthread.cpp
 HEADERS += mainwindow.h \
     tile.h \
-    timerthread.h \
-	customImagMainWindow.h\
-	layoutholder.h
+    timerthread.h
 FORMS += mainwindow.ui
 
 # Please do not modify the following two lines. Required for deployment.
