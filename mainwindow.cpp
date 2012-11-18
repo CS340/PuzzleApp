@@ -24,9 +24,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::display(int screenWidth, int screenHeight)
 {
-    int grid = 5;
+    grid = 5;
     numMoves = 0;
     seconds = 0;
+    percentComplete = grid*grid;
 
     //set up scene and view
     QGraphicsScene *gScene = new QGraphicsScene(this);
@@ -46,10 +47,12 @@ void MainWindow::display(int screenWidth, int screenHeight)
     layout->addLayout(menuGrid, 1, 0);
 
     //timer and move labels
-    movesLabel = new QLabel("Number of moves: " + QString::number(numMoves));
+    movesLabel = new QLabel("Moves: " + QString::number(numMoves));
     menuGrid->addWidget(movesLabel,0,0);
-    timerLabel = new QLabel("Duration of game(m:s): 0:0");
-    menuGrid->addWidget(timerLabel,1,0);
+    timerLabel = new QLabel("Time: 0:0");
+    menuGrid->addWidget(timerLabel,0,1);
+    percentLabel = new QLabel("Percent: 0%");
+    menuGrid->addWidget(percentLabel,0,2);
 
     //import image
     QImageReader reader(":/elephant.gif");
@@ -92,26 +95,45 @@ void MainWindow::display(int screenWidth, int screenHeight)
     }
 
 
-    shuffle(grid);
+    shuffle();
     qDebug("Shuffled");
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(1000);
 
-    //screen switch testing//
-    test = new Tile("Test");
-    menuGrid->addWidget(test, 2, 0);
-    connect(test, SIGNAL(tileClicked(Tile*)), this, SLOT(handleTileClick(Tile*)));
+    percentLabel->setText("Percent Complete: " + QString::number(calculatePercent()) + "%");
 
     gView->show();
 }
 
-void MainWindow::shuffle(int grid)
+int MainWindow::calculatePercent()
 {
+    /*int total = grid*grid;
+    int inplace = 0;
     for(int i = 0; i < grid - 1; i++)
     {
         for(int j = 0; j < grid - 1; j++)
+        {
+            if(!(i == grid - 1 && j == grid - 1))
+            {
+                Tile *g = dynamic_cast<Tile*>(playGrid->itemAtPosition(i,j)->widget());
+                if(g->getInitX() == i && g->getInitY() == j)
+                {
+                    inplace++;
+                }
+            }
+        }
+    }*/
+
+    return (int)(100.00 * ((float)percentComplete/(float)(grid*grid)));
+}
+
+void MainWindow::shuffle()
+{
+    for(int i = 0; i < grid; i++)
+    {
+        for(int j = 0; j < grid; j++)
         {
             if(!(i == grid - 1 && j == grid - 1))
             {
@@ -137,39 +159,53 @@ void MainWindow::swapTiles(Tile *tile1, Tile *tile2){
     playGrid->removeWidget(tile1);
     playGrid->removeWidget(tile2);
 
-    playGrid->addWidget(tile1, tile2->getY(), tile2->getX());
-    playGrid->addWidget(tile2, tile1->getY(), tile1->getX());
+    int x1start = tile1->getX();
+    int y1start = tile1->getY();
+    int x2start = tile2->getX();
+    int y2start = tile2->getY();
 
-    int tmpx = tile1->getX();
-    int tmpy = tile1->getY();
+    playGrid->addWidget(tile1, y2start, x2start);
+    playGrid->addWidget(tile2, y1start, x1start);
 
-    tile1->setX(tile2->getX());
-    tile1->setY(tile2->getY());
-    tile2->setX(tmpx);
-    tile2->setY(tmpy);
+    tile1->setX(x2start);
+    tile1->setY(y2start);
+    tile2->setX(x1start);
+    tile2->setY(y1start);
+
+    if(x1start == tile1->getInitX() && y1start == tile1->getInitY())
+    {
+        percentComplete--;
+    }
+    if(x2start == tile1->getInitX() && y2start == tile1->getInitY())
+    {
+        percentComplete++;
+    }
+
+    if(x2start == tile2->getInitX() && y2start == tile2->getInitY())
+    {
+        percentComplete--;
+    }
+    if(x1start == tile2->getInitX() && y1start == tile2->getInitY())
+    {
+        percentComplete++;
+    }
 }
 
 void MainWindow::update()
 {
     int minutes = (++seconds) / 60;
-    timerLabel->setText("Duration of game(m:s): " + QString::number(minutes) + ":" + QString::number(seconds-(minutes*60)));
+    timerLabel->setText("Time: " + QString::number(minutes) + ":" + QString::number(seconds-(minutes*60)));
 }
 
 void MainWindow::handleTileClick(Tile* t)
 {
-    //TEST STUFF//
-    if(t==test)
-    {
-        //switch screens
-
-    }
-
     if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
     {
         //qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
         swapTiles(t, hiddenTile);
         //qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
-        movesLabel->setText("Number of moves: " + QString::number(++numMoves));
+        movesLabel->setText("Moves: " + QString::number(++numMoves));
+        percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
         qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
     }
 }

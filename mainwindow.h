@@ -39,7 +39,8 @@ public:
 private:
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
     void swapTiles(Tile *tile1, Tile *tile2);
-    void shuffle(int grid);
+    void shuffle();
+    int calculatePercent();
 
     QGraphicsView *gView;
     QGridLayout *layout;
@@ -49,8 +50,11 @@ private:
     Tile *hiddenTile;
     int numMoves;
     int seconds;
+    int percentComplete;
+    int grid;
     QLabel *movesLabel;
     QLabel *timerLabel;
+    QLabel *percentLabel;
     QTimer *timer;
 
 private slots:

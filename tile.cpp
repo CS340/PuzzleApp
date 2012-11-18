@@ -5,6 +5,8 @@ Tile::Tile(int x, int y, const QIcon & icon, QWidget * parent) : QPushButton(ico
     //qDebug("NEW_TILE");
     this->x = x;
     this->y = y;
+    initX = x;
+    initY = y;
     QObject::connect(this, SIGNAL(clicked()), this, SLOT(onClick()));
 }
 
@@ -32,6 +34,16 @@ int Tile::getX()
 int Tile::getY()
 {
     return this->y;
+}
+
+int Tile::getInitX()
+{
+    return initX;
+}
+
+int Tile::getInitY()
+{
+    return initY;
 }
 
 void Tile::setX(int a)

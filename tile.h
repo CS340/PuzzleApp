@@ -15,6 +15,8 @@ public:
     virtual ~Tile();
     int getX();
     int getY();
+    int getInitX();
+    int getInitY();
     void setX(int a);
     void setY(int a);
 
@@ -23,6 +25,8 @@ private:
     int y;
     int width;
     int height;
+    int initX;
+    int initY;
 
 signals:
     void tileClicked(Tile*);
