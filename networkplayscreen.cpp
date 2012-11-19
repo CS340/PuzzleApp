@@ -1,6 +1,5 @@
-#include "playscreen.h"
+#include "networkplayscreen.h"
 #include "tile.h"
-
 #include <QLabel>
 #include <QImageReader>
 #include <QGridLayout>
@@ -9,13 +8,13 @@
 #include <math.h>
 #include <QDebug>
 
-PlayScreen::PlayScreen(QWidget *parent) :
+NetworkPlayScreen::NetworkPlayScreen(QWidget *parent) :
     QWidget(parent)
 {
 }
 
 
-void PlayScreen::display(int screenWidth, int screenHeight)
+void NetworkPlayScreen::display(int screenWidth, int screenHeight)
 {
     grid = 5;
     numMoves = 0;
@@ -89,7 +88,6 @@ void PlayScreen::display(int screenWidth, int screenHeight)
 
 
     shuffle();
-
     if(percentComplete == grid*grid)
     {
         playerWin();
@@ -104,7 +102,7 @@ void PlayScreen::display(int screenWidth, int screenHeight)
     gView->show();
 }
 
-int PlayScreen::calculatePercent()
+int NetworkPlayScreen::calculatePercent()
 {
     /*int total = grid*grid;
     int inplace = 0;
@@ -126,7 +124,7 @@ int PlayScreen::calculatePercent()
     return (int)(100.00 * ((float)percentComplete/(float)(grid*grid)));
 }
 
-void PlayScreen::shuffle()
+void NetworkPlayScreen::shuffle()
 {
     for(int i = 0; i < grid; i++)
     {
@@ -152,7 +150,7 @@ void PlayScreen::shuffle()
     }
 }
 
-void PlayScreen::swapTiles(Tile *tile1, Tile *tile2){
+void NetworkPlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     playGrid->removeWidget(tile1);
     playGrid->removeWidget(tile2);
 
@@ -188,13 +186,13 @@ void PlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     }
 }
 
-void PlayScreen::update()
+void NetworkPlayScreen::update()
 {
     int minutes = (++seconds) / 60;
     timerLabel->setText("Time: " + QString::number(minutes) + ":" + QString::number(seconds-(minutes*60)));
 }
 
-void PlayScreen::handleTileClick(Tile* t)
+void NetworkPlayScreen::handleTileClick(Tile* t)
 {
     if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
     {
@@ -207,7 +205,7 @@ void PlayScreen::handleTileClick(Tile* t)
     }
 }
 
-void PlayScreen::playerWin()
+void NetworkPlayScreen::playerWin()
 {
 
 }

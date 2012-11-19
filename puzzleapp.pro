@@ -9,15 +9,20 @@ DEPLOYMENTFOLDERS = # file1 dir1
 # MOBILITY variable. 
 CONFIG += console
 # MOBILITY +=
+QT += network
 
 SOURCES += main.cpp mainwindow.cpp \
     tile.cpp \
     playscreen.cpp \
-    mainmenu.cpp
+    mainmenu.cpp \
+    networkplayscreen.cpp \
+    highscorescreen.cpp
 HEADERS += mainwindow.h \
     tile.h \
     playscreen.h \
-    mainmenu.h
+    mainmenu.h \
+    networkplayscreen.h \
+    highscorescreen.h
 FORMS += mainwindow.ui
 
 # Please do not modify the following two lines. Required for deployment.

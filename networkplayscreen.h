@@ -1,5 +1,5 @@
-#ifndef PLAYSCREEN_H
-#define PLAYSCREEN_H
+#ifndef NETWORKPLAYSCREEN_H
+#define NETWORKPLAYSCREEN_H
 
 #include <QWidget>
 #include "tile.h"
@@ -10,11 +10,11 @@
 #include <QGridLayout>
 #include <QLabel>
 
-class PlayScreen : public QWidget
+class NetworkPlayScreen : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlayScreen(QWidget *parent = 0);
+    explicit NetworkPlayScreen(QWidget *parent = 0);
     void display(int screenWidth, int screenHeight);
 
 private:
@@ -43,4 +43,4 @@ private slots:
     void update();
 };
 
-#endif // PLAYSCREEN_H
+#endif // NETWORKPLAYSCREEN_H

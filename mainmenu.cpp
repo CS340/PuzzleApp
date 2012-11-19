@@ -10,6 +10,7 @@
 #include <QImage>
 #include <QDebug>
 #include "playscreen.h"
+#include "highscorescreen.h"
 
 MainMenu::MainMenu(QWidget *parent) :
     QWidget(parent)
@@ -40,6 +41,7 @@ void MainMenu::display(int sw, int sh)
     QPushButton *button1 = new QPushButton("Custom Image");
     QPushButton *button2 = new QPushButton("Single Player");
     QPushButton *button3 = new QPushButton("Multi-player");
+    QPushButton *highscore = new QPushButton("Highscores");
     QSize buttonsize1(sw,100);
     QFont myfont("Helvetica", 16, QFont::Bold);
     myfont.setFamily("Helvetica");
@@ -65,8 +67,10 @@ void MainMenu::display(int sw, int sh)
     button1->setFixedSize(elephant.width(), 100);
     button2->setFixedSize(buttonsize1);
     button3->setFixedSize(buttonsize1);
+    highscore->setFixedSize(buttonsize1);
     button2->setFont(myfont);
     button3->setFont(myfont);
+    highscore->setFont(myfont);
     button4->setFixedSize(buttonsize2);
     button5->setFixedSize(buttonsize2);
     button4->setFont(myfont);
@@ -79,8 +83,10 @@ void MainMenu::display(int sw, int sh)
     layout->addWidget(button1, 2, 1, 1, 3, Qt::AlignHCenter);
     layout->addWidget(button2, 3, 1, 1, 3, Qt::AlignHCenter);
     layout->addWidget(button3, 4, 1, 1, 3, Qt::AlignHCenter);
+    layout->addWidget(highscore, 5, 1, 1, 3, Qt::AlignHCenter);
 
     connect(button2, SIGNAL(clicked()), this, SLOT(makeGame()));
+    connect(highscore, SIGNAL(clicked()), this, SLOT(makeHighscore()));
 
     widget1->show();
 }
@@ -91,4 +97,12 @@ void MainMenu::makeGame()
     PlayScreen *ps = new PlayScreen(this->parentWidget());
     ps->display(screenWidth, screenHeight);
     qDebug() << "Game made.";
+}
+
+void MainMenu::makeHighscore()
+{
+    qDebug() << "Making Highscore...";
+    HighscoreScreen *hss = new HighscoreScreen();
+    hss->display(screenWidth, screenHeight);
+    qDebug() << "Highscore made.";
 }
