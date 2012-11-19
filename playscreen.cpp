@@ -106,24 +106,11 @@ void PlayScreen::display(int screenWidth, int screenHeight)
 
 int PlayScreen::calculatePercent()
 {
-    /*int total = grid*grid;
-    int inplace = 0;
-    for(int i = 0; i < grid - 1; i++)
+    if(percentComplete == 0)
     {
-        for(int j = 0; j < grid - 1; j++)
-        {
-            if(!(i == grid - 1 && j == grid - 1))
-            {
-                Tile *g = dynamic_cast<Tile*>(playGrid->itemAtPosition(i,j)->widget());
-                if(g->getInitX() == i && g->getInitY() == j)
-                {
-                    inplace++;
-                }
-            }
-        }
-    }*/
-
-    return (int)(100.00 * ((float)percentComplete/(float)(grid*grid)));
+        return 0;
+    }
+    return (int)(100.00 * ((float)percentComplete/(float)(grid*grid))) + 1;
 }
 
 void PlayScreen::shuffle()
