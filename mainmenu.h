@@ -19,6 +19,8 @@ signals:
 public slots:
     void makeGame();
     void makeHighscore();
+    void customImage();
+    void cancel();
     
 };
 
