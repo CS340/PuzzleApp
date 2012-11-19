@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "tile.h"
-#include "timerthread.h"
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -34,32 +33,12 @@ public:
 
     void showExpanded();
 
-    Tile *test;
-
 private:
-    int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
-    void swapTiles(Tile *tile1, Tile *tile2);
-    void shuffle();
-    int calculatePercent();
-
-    QGraphicsView *gView;
-    QGridLayout *layout;
-    QGridLayout *playGrid;
-    QGridLayout *menuGrid;
     Ui::MainWindow *ui;
-    Tile *hiddenTile;
-    int numMoves;
-    int seconds;
-    int percentComplete;
-    int grid;
-    QLabel *movesLabel;
-    QLabel *timerLabel;
-    QLabel *percentLabel;
-    QTimer *timer;
+
 
 private slots:
-    void handleTileClick(Tile*);
-    void update();
+
 };
 
 #endif // MAINWINDOW_H

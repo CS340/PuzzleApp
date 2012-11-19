@@ -12,10 +12,12 @@ CONFIG += console
 
 SOURCES += main.cpp mainwindow.cpp \
     tile.cpp \
-    timerthread.cpp
+    playscreen.cpp \
+    mainmenu.cpp
 HEADERS += mainwindow.h \
     tile.h \
-    timerthread.h
+    playscreen.h \
+    mainmenu.h
 FORMS += mainwindow.ui
 
 # Please do not modify the following two lines. Required for deployment.

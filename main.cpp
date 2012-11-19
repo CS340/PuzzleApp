@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "mainmenu.h"
 
 #include <QApplication>
 #include<QDesktopWidget>
@@ -17,7 +18,11 @@ int main(int argc, char *argv[])
     mainWindow.resize(screenWidth, screenHeight);
     mainWindow.showExpanded();
 
-    mainWindow.display(screenWidth, screenHeight);
+    MainMenu *mm = new MainMenu(&mainWindow);
+    mm->display(screenWidth, screenHeight);
+
+
+    //mainWindow.display(screenWidth, screenHeight);
 
     return app.exec();
 }

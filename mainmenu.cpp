@@ -1,0 +1,94 @@
+#include "mainmenu.h"
+#include <QApplication>
+#include <QLabel>
+#include <QPushButton>
+#include <QSize>
+#include <QGridLayout>
+#include <QFont>
+#include <QImageReader>
+#include <QDesktopWidget>
+#include <QImage>
+#include <QDebug>
+#include "playscreen.h"
+
+MainMenu::MainMenu(QWidget *parent) :
+    QWidget(parent)
+{
+}
+
+void MainMenu::display(int sw, int sh)
+{
+
+    screenWidth = sw;
+    screenHeight = sh;
+
+    //setup for picture
+    QLabel *imageLabel = new QLabel(this);
+    QImage elephant(":/elephant.gif");
+
+    elephant = elephant.scaledToWidth(sw - 200);
+
+    imageLabel->setPixmap(QPixmap::fromImage(elephant));
+    imageLabel->resize(elephant.width(), elephant.height());
+    imageLabel->show();
+
+    //setup for buttons
+    QWidget *widget1 = new QWidget;
+    QGridLayout *layout = new QGridLayout;
+    widget1->setLayout(layout);
+
+    QPushButton *button1 = new QPushButton("Custom Image");
+    QPushButton *button2 = new QPushButton("Single Player");
+    QPushButton *button3 = new QPushButton("Multi-player");
+    QSize buttonsize1(sw,100);
+    QFont myfont("Helvetica", 16, QFont::Bold);
+    myfont.setFamily("Helvetica");
+
+    //setup for arrow buttons
+    QImage r_arrow_pic(":/Right.gif");
+    QImage l_arrow_pic(":/Left.gif");
+
+    QLabel *l_arrow_button = new QLabel(this);
+    QLabel *r_arrow_button = new QLabel(this);
+
+    l_arrow_pic = l_arrow_pic.scaledToWidth(50);
+    r_arrow_pic = r_arrow_pic.scaledToWidth(50);
+
+    l_arrow_button->setPixmap(QPixmap::fromImage(l_arrow_pic));
+    r_arrow_button->setPixmap(QPixmap::fromImage(r_arrow_pic));
+
+    QPushButton *button4 = new QPushButton("<");
+    QPushButton *button5 = new QPushButton(">");
+    QSize buttonsize2(50, elephant.height());
+
+    //Putting everything together in the menu
+    button1->setFixedSize(elephant.width(), 100);
+    button2->setFixedSize(buttonsize1);
+    button3->setFixedSize(buttonsize1);
+    button2->setFont(myfont);
+    button3->setFont(myfont);
+    button4->setFixedSize(buttonsize2);
+    button5->setFixedSize(buttonsize2);
+    button4->setFont(myfont);
+    button5->setFont(myfont);
+
+
+    layout->addWidget(l_arrow_button, 1, 1, 1, 1);
+    layout->addWidget(imageLabel, 1, 2, 1, 1, Qt::AlignHCenter);
+    layout->addWidget(r_arrow_button, 1, 3, 1, 1, Qt::AlignRight);
+    layout->addWidget(button1, 2, 1, 1, 3, Qt::AlignHCenter);
+    layout->addWidget(button2, 3, 1, 1, 3, Qt::AlignHCenter);
+    layout->addWidget(button3, 4, 1, 1, 3, Qt::AlignHCenter);
+
+    connect(button2, SIGNAL(clicked()), this, SLOT(makeGame()));
+
+    widget1->show();
+}
+
+void MainMenu::makeGame()
+{
+    qDebug() << "Making game...";
+    PlayScreen *ps = new PlayScreen(this->parentWidget());
+    ps->display(screenWidth, screenHeight);
+    qDebug() << "Game made.";
+}

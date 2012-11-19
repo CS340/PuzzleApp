@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>elephant.gif</file>
         <file>black.png</file>
+        <file>Left.gif</file>
+        <file>Right.gif</file>
     </qresource>
 </RCC>
