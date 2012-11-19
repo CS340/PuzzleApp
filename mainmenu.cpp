@@ -110,6 +110,11 @@ void MainMenu::cancel()
     this->raise();
 }
 
+void MainMenu::customImageChosen(QString path)
+{
+    qDebug() << "custom image chosen: " << path;
+}
+
 void MainMenu::makeGame()
 {
     qDebug() << "Making game...";

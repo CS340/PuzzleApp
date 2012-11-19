@@ -21,6 +21,7 @@ public slots:
     void makeHighscore();
     void customImage();
     void cancel();
+    void customImageChosen(QString path);
     
 };
 

@@ -22,7 +22,7 @@ signals:
 
 private slots:
    void onClick(){
-       qDebug("CUSTOMIMAGEBUTTON_CLICK");
+       //qDebug("CUSTOMIMAGEBUTTON_CLICK");
        emit customImageButtonClicked(path);
    }
 };

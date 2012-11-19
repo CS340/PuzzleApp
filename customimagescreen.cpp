@@ -71,7 +71,7 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
                 QPixmap pixmap = QPixmap::fromImage(pic);
                 QIcon icon(pixmap);
                 customImageButton *button = new customImageButton(path, icon);
-                //PUT IN CONNECT HERE ONCE ALL SCREENS ARE IN ONE APP
+                connect(button, SIGNAL(customImageButtonClicked(QString*)), mainMenu, SLOT(customImageChosen(QString*)));
 
                 button->setIconSize(QSize(picWidth, picHeight));
                 pics->addWidget(button,i,j);
