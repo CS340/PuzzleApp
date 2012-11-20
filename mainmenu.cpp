@@ -102,12 +102,12 @@ void MainMenu::customImage()
     CustomImageScreen *cis = new CustomImageScreen(this, this);
     cis->display(screenWidth, screenHeight);
     qDebug() << "custom image made";
-    this->raise();
 }
 
 void MainMenu::cancel()
 {
-    this->raise();
+    qDebug() << "canceling...";
+
 }
 
 void MainMenu::customImageChosen(QString path)

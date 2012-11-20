@@ -16,6 +16,9 @@ CustomImageScreen::CustomImageScreen(MainMenu *mm, QWidget *parent) : QWidget(pa
 
 void CustomImageScreen::display(int screenWidth, int screenHeight)
 {
+    sw = screenWidth;
+    sh = screenHeight;
+
     //create GraphicsScene and GraphicsView
     QGraphicsScene *gScene = new QGraphicsScene(this);
     gView = new QGraphicsView(gScene);
@@ -87,7 +90,6 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
 
         //resize scroll area holder
         holder->resize(screenWidth*5.1/5.4, files.size()/3 *screenHeight *1/5);
-
     }
 
     else
@@ -104,8 +106,13 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
     //cancel button
     QPushButton *cancel = new QPushButton("Cancel", gView);
     layout->addWidget(cancel, 4, 0);
-    connect(cancel, SIGNAL(clicked()), mainMenu, SIGNAL(cancel()));
-
+    connect(cancel, SIGNAL(clicked()), this, SLOT(cancel()));
+    connect(this, SIGNAL(canc()), mainMenu, SLOT(cancel()));
     gView->show();
     this->show();
+}
+
+void CustomImageScreen::cancel()
+{
+    mainMenu->display(sw, sh);
 }

@@ -17,6 +17,13 @@ public:
 private:
     QGraphicsView *gView;
     MainMenu *mainMenu;
+    int sw, sh;
+
+signals:
+    void canc();
+
+private slots:
+    void cancel();
 
 };
 
