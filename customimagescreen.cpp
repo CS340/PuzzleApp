@@ -16,6 +16,9 @@ CustomImageScreen::CustomImageScreen(MainMenu *mm, QWidget *parent) : QWidget(pa
 
 void CustomImageScreen::display(int screenWidth, int screenHeight)
 {
+    sw = screenWidth;
+    sh = screenHeight;
+
     //create GraphicsScene and GraphicsView
     QGraphicsScene *gScene = new QGraphicsScene(this);
     gView = new QGraphicsView(gScene);
@@ -108,4 +111,9 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
 
     gView->show();
     this->show();
+}
+
+void CustomImageScreen::cancel()
+{
+    mainMenu->display(sw, sh);
 }

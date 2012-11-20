@@ -15,9 +15,9 @@
 #include <QDebug>
 
 
-MainMenu::MainMenu(QWidget *parent) :
-    QWidget(parent)
+MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
 {
+
 }
 
 void MainMenu::display(int sw, int sh)
