@@ -14,7 +14,8 @@ class NetworkPlayScreen : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NetworkPlayScreen(QWidget *parent = 0, int screenWidth, int screenHeight);
+    explicit NetworkPlayScreen(QWidget *parent = 0);
+    void display(int screenWidth, int screenHeight);
 
 private:
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);

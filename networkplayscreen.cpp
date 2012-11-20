@@ -8,8 +8,13 @@
 #include <math.h>
 #include <QDebug>
 
-NetworkPlayScreen::NetworkPlayScreen(QWidget *parent, int screenWidth, int screenHeight) :
+NetworkPlayScreen::NetworkPlayScreen(QWidget *parent) :
     QWidget(parent)
+{
+
+}
+
+void NetworkPlayScreen::display(int screenWidth, int screenHeight)
 {
     grid = 5;
     numMoves = 0;
