@@ -126,7 +126,6 @@ void MainMenu::makeGame()
 void MainMenu::makeHighscore()
 {
     qDebug() << "Making Highscore...";
-    HighscoreScreen *hss = new HighscoreScreen();
-    hss->display(screenWidth, screenHeight);
+    HighscoreScreen *hss = new HighscoreScreen(screenWidth, screenHeight);
     qDebug() << "Highscore made.";
 }
