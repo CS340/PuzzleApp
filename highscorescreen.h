@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpSocket>
+#include <QLabel>
 
 class HighscoreScreen : public QWidget
 {
@@ -14,8 +15,15 @@ public:
 private:
     void test();
     void makeCon();
+
+    QString parseResponse(QString s);
     QTcpSocket *socket;
     bool all;
+    QString myScoreString;
+    QString allScoreString;
+    QLabel *allScoreLabel;
+    QLabel *myScoreLabel;
+
 signals:
     
 public slots:
