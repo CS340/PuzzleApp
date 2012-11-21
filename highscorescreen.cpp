@@ -2,11 +2,15 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QTcpSocket>
+#include <Qt>
+#include <QLabel>
 
 HighscoreScreen::HighscoreScreen(QWidget *parent) :
     QWidget(parent)
 {
     all = false;
+    myScoreString = "<table cellpadding=\"3\" border=\"1\"><tr><th>Please reload this list</th></tr></table>";
+    allScoreString = "<table  cellpadding=\"3\" border=\"1\"><tr><th>Please reload this list</th></tr></table>";
     socket = new QTcpSocket(this);
 
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
@@ -29,9 +33,53 @@ void HighscoreScreen::display(int screenWidth, int screenHeight)
     connect(mine, SIGNAL(clicked()), this, SLOT(mineScores()));
     connect(all, SIGNAL(clicked()), this, SLOT(allScores()));
 
+    allScoreLabel = new QLabel(allScoreString);
+    myScoreLabel = new QLabel(myScoreString);
+
+    mineScores();
+    allScores();
+
+    layout->addWidget(myScoreLabel,1,0);
+    layout->addWidget(allScoreLabel,1,1);
+
+
     this->show();
 
 }
+
+QString HighscoreScreen::parseResponse(QString s)
+{
+    QStringList parts = s.split(":");
+    QString result;
+
+    if(parts.length() != 3)
+    {
+        return "ERROR: Could not get scores.";
+    }
+    parts[2].truncate(parts[2].length()-2);
+
+    QStringList pieces = parts[2].split(";");
+    QStringList pppp;
+    for(int i = 0; i < pieces.length(); i++)
+    { 
+        pppp = pieces[i].split(",");
+        result += "<tr><td>" + pppp[0] +  "</td><td>" + pppp[1] + "</td></tr>";
+    }
+
+    if(parts[1] == "all")
+    {
+        allScoreString = "<table cellpadding=\"3\" border=\"1\"><tr><th>User</th><th>Score</th></tr>" + result + "</table>";
+        allScoreLabel->setText(allScoreString);
+    }
+    else
+    {
+        myScoreString = "<table cellpadding=\"3\" border=\"1\"><tr><th>User</th><th>Score</th></tr>" + result + "</table>";
+        myScoreLabel->setText(myScoreString);
+    }
+
+    return result;
+}
+
 void HighscoreScreen::allScores()
 {
     all = true;
@@ -41,7 +89,7 @@ void HighscoreScreen::allScores()
 void HighscoreScreen::makeCon()
 {
     qDebug() << "Connecting...";
-    socket->connectToHost("10.107.205.243", 4848);
+    socket->connectToHost("10.8.200.211", 4848);
 
     if(!socket->waitForConnected(1000))
     {
@@ -75,7 +123,7 @@ void HighscoreScreen::bytesWritten(qint64 bytes)
 void HighscoreScreen::readyRead()
 {
     qDebug() << "Reading...";
-    qDebug() << socket->readLine(1024);
+    parseResponse(socket->readLine(1024));
 }
 
 void HighscoreScreen::mineScores()
