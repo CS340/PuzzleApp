@@ -24,6 +24,8 @@ private:
     int calculatePercent();
     void playerWin();
 
+    int screenWidth, screenHeight;
+
     QGraphicsView *gView;
     QGridLayout *layout;
     QGridLayout *playGrid;

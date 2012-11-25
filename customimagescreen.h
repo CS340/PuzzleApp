@@ -17,6 +17,10 @@ public:
 private:
     QGraphicsView *gView;
     MainMenu *mainMenu;
+    int screenWidth, screenHeight;
+
+public slots:
+    void customImageChosen(QString*);
 
 };
 

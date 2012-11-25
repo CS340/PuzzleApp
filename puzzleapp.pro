@@ -18,7 +18,8 @@ SOURCES += main.cpp mainwindow.cpp \
     networkplayscreen.cpp \
     highscorescreen.cpp \
     customimagescreen.cpp \
-    customimagebutton.cpp
+    customimagebutton.cpp \
+    win_menu.cpp
 HEADERS += mainwindow.h \
     tile.h \
     playscreen.h \
@@ -26,7 +27,8 @@ HEADERS += mainwindow.h \
     networkplayscreen.h \
     highscorescreen.h \
     customimagescreen.h \
-    customimagebutton.h
+    customimagebutton.h \
+    win_menu.h
 FORMS += mainwindow.ui
 
 # Please do not modify the following two lines. Required for deployment.

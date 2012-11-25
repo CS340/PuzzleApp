@@ -9,16 +9,16 @@ class customImageButton : public QPushButton
 Q_OBJECT
 
 public:
-   explicit customImageButton(QString p, const QIcon &icon, QWidget *parent = 0);
+   explicit customImageButton(QString *p, const QIcon &icon, QWidget *parent = 0);
    explicit customImageButton();
    virtual ~customImageButton();
-   QString getPath();
+   QString *getPath();
 
 private:
-   QString path;
+   QString *path;
 
 signals:
-   void customImageButtonClicked(QString);
+   void customImageButtonClicked(QString*);
 
 private slots:
    void onClick(){

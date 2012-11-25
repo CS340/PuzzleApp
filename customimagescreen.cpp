@@ -8,6 +8,7 @@
 #include <QGridLayout>
 #include <QScrollArea>
 #include <QLabel>
+#include <QDebug>
 
 CustomImageScreen::CustomImageScreen(MainMenu *mm, QWidget *parent) : QWidget(parent)
 {
@@ -16,8 +17,8 @@ CustomImageScreen::CustomImageScreen(MainMenu *mm, QWidget *parent) : QWidget(pa
 
 void CustomImageScreen::display(int screenWidth, int screenHeight)
 {
-    sw = screenWidth;
-    sh = screenHeight;
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
 
     //create GraphicsScene and GraphicsView
     QGraphicsScene *gScene = new QGraphicsScene(this);
@@ -73,8 +74,8 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
 
                 QPixmap pixmap = QPixmap::fromImage(pic);
                 QIcon icon(pixmap);
-                customImageButton *button = new customImageButton(path, icon);
-                connect(button, SIGNAL(customImageButtonClicked(QString*)), mainMenu, SLOT(customImageChosen(QString*)));
+                customImageButton *button = new customImageButton(&path, icon);
+                connect(button, SIGNAL(customImageButtonClicked(QString*)), this, SLOT(customImageChosen(QString*)));
 
                 button->setIconSize(QSize(picWidth, picHeight));
                 pics->addWidget(button,i,j);
@@ -113,7 +114,9 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
     this->show();
 }
 
-void CustomImageScreen::cancel()
+void CustomImageScreen::customImageChosen(QString *path)
 {
-    mainMenu->display(sw, sh);
+    qDebug() << "custom image chosen";
+    MainMenu *mm = new MainMenu(path, this);
+    mm->display(screenWidth, screenHeight);
 }

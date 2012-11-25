@@ -5,8 +5,7 @@
 #include <Qt>
 #include <QLabel>
 
-HighscoreScreen::HighscoreScreen(QWidget *parent) :
-    QWidget(parent)
+HighscoreScreen::HighscoreScreen(QWidget *parent) : QWidget(parent)
 {
     all = false;
     myScoreString = "<table cellpadding=\"3\" border=\"1\"><tr><th>Please reload this list</th></tr></table>";

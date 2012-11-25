@@ -1,5 +1,6 @@
 #include "playscreen.h"
 #include "tile.h"
+#include "win_menu.h"
 
 #include <QLabel>
 #include <QImageReader>
@@ -9,14 +10,17 @@
 #include <math.h>
 #include <QDebug>
 
-PlayScreen::PlayScreen(QWidget *parent) :
-    QWidget(parent)
+PlayScreen::PlayScreen(QWidget *parent) : QWidget(parent)
 {
+
 }
 
 
 void PlayScreen::display(int screenWidth, int screenHeight)
 {
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
+
     grid = 5;
     numMoves = 0;
     seconds = 0;
@@ -79,9 +83,7 @@ void PlayScreen::display(int screenWidth, int screenHeight)
     //grid sizing
     for(int i=0; i<layout->columnCount(); i++)
         layout->setColumnMinimumWidth(i, screenWidth);
-
     layout->setRowMinimumHeight(1, screenHeight-screenWidth);
-
     for(int i=0; i<playGrid->rowCount(); i++){
         playGrid->setColumnMinimumWidth(i, screenWidth/grid);
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
@@ -89,6 +91,9 @@ void PlayScreen::display(int screenWidth, int screenHeight)
 
 
     shuffle();
+
+    playerWin();//-------------------THIS DOESNT WORK!
+    qDebug() << "after playerwin";
 
     if(percentComplete == grid*grid)
     {
@@ -100,6 +105,7 @@ void PlayScreen::display(int screenWidth, int screenHeight)
     timer->start(1000);
 
     percentLabel->setText("Percent Complete: " + QString::number(calculatePercent()) + "%");
+
 
     gView->show();
 }
@@ -196,5 +202,7 @@ void PlayScreen::handleTileClick(Tile* t)
 
 void PlayScreen::playerWin()
 {
-
+    qDebug() << "player won.";
+    win_menu *wm = new win_menu(this);
+    wm->display(screenWidth, screenHeight);
 }

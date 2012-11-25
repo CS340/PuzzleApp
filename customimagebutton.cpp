@@ -1,6 +1,6 @@
 #include "customimagebutton.h"
 
-customImageButton::customImageButton(QString p, const QIcon &icon, QWidget *parent) : QPushButton(icon, "", parent)
+customImageButton::customImageButton(QString *p, const QIcon &icon, QWidget *parent) : QPushButton(icon, "", parent)
 {
    qDebug("NEW_CUSTOMIMAGEBUTTON");
    path = p;
@@ -17,7 +17,7 @@ customImageButton::~customImageButton()
 
 }
 
-QString customImageButton::getPath()
+QString *customImageButton::getPath()
 {
    return this->path;
 }

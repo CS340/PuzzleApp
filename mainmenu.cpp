@@ -17,7 +17,12 @@
 
 MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
 {
+    imgPath = new QString(":/elephant.gif");
+}
 
+MainMenu::MainMenu(QString *path, QWidget *parent)
+{
+    imgPath = path;
 }
 
 void MainMenu::display(int sw, int sh)
@@ -98,21 +103,14 @@ void MainMenu::display(int sw, int sh)
 void MainMenu::customImage()
 {
     qDebug() << "Making custom image";
-
     CustomImageScreen *cis = new CustomImageScreen(this, this);
     cis->display(screenWidth, screenHeight);
     qDebug() << "custom image made";
-    this->raise();
 }
 
 void MainMenu::cancel()
 {
     this->raise();
-}
-
-void MainMenu::customImageChosen(QString path)
-{
-    qDebug() << "custom image chosen: " << path;
 }
 
 void MainMenu::makeGame()

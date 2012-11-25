@@ -4,5 +4,6 @@
         <file>black.png</file>
         <file>Left.gif</file>
         <file>Right.gif</file>
+        <file>animated-fireworks.gif</file>
     </qresource>
 </RCC>
