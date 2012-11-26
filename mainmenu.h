@@ -3,19 +3,25 @@
 
 #include <QWidget>
 #include <QString>
+#include <vector>
+#include <QLabel>
+#include <QGridLayout>
 
 class MainMenu : public QWidget
 {
     Q_OBJECT
 public:
     explicit MainMenu(QWidget *parent = 0);
-    explicit MainMenu(QString *path, QWidget *parent = 0);
+    explicit MainMenu(QString path, QWidget *parent = 0);
     void display(int sw, int sh);
 
 private:
     int screenHeight;
     int screenWidth;
-    QString *imgPath;
+    int pathsIndex;
+    QLabel *imageLabel;
+    std::vector<QString> paths;
+    QGridLayout *layout;
 
 signals:
     

@@ -20,7 +20,7 @@ private:
     int screenWidth, screenHeight;
 
 public slots:
-    void customImageChosen(QString*);
+    void customImageChosen(QString);
 
 };
 

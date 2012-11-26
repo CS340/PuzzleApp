@@ -74,8 +74,8 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
 
                 QPixmap pixmap = QPixmap::fromImage(pic);
                 QIcon icon(pixmap);
-                customImageButton *button = new customImageButton(&path, icon);
-                connect(button, SIGNAL(customImageButtonClicked(QString*)), this, SLOT(customImageChosen(QString*)));
+                customImageButton *button = new customImageButton(path, icon);
+                connect(button, SIGNAL(customImageButtonClicked(QString)), this, SLOT(customImageChosen(QString)));
 
                 button->setIconSize(QSize(picWidth, picHeight));
                 pics->addWidget(button,i,j);
@@ -114,7 +114,7 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
     this->show();
 }
 
-void CustomImageScreen::customImageChosen(QString *path)
+void CustomImageScreen::customImageChosen(QString path)
 {
     qDebug() << "custom image chosen";
     MainMenu *mm = new MainMenu(path, this);

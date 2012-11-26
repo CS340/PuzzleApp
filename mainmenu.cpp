@@ -18,33 +18,33 @@
 
 MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
 {
-    imgPath = new QString(":/elephant.gif");
+    pathsIndex = 0;
+    paths.push_back(QString(":/elephant.gif"));
 }
 
-MainMenu::MainMenu(QString *path, QWidget *parent) : QWidget(parent)
+MainMenu::MainMenu(QString path, QWidget *parent) : QWidget(parent)
 {
-    imgPath = path;
+    pathsIndex = 0;
+    paths.push_back(path);
+    paths.push_back(QString(":/elephant.gif"));
 }
 
 void MainMenu::display(int sw, int sh)
 {
-
     screenWidth = sw;
     screenHeight = sh;
 
     //setup for picture
-    QLabel *imageLabel = new QLabel(this);
-    QImage elephant(":/elephant.gif");
+    imageLabel = new QLabel(this);
+    QImage image(paths[pathsIndex]);
+    image = image.scaledToWidth((4.4/6.1)*sw);
 
-    elephant = elephant.scaledToWidth((4.4/6.1)*sw);
-
-    imageLabel->setPixmap(QPixmap::fromImage(elephant));
-    imageLabel->resize(elephant.width(), elephant.height());
-    imageLabel->show();
+    imageLabel->setPixmap(QPixmap::fromImage(image));
+    imageLabel->resize(image.width(), image.height());
 
     //setup for buttons
     QWidget *widget1 = new QWidget;
-    QGridLayout *layout = new QGridLayout;
+    layout = new QGridLayout;
     widget1->setLayout(layout);
 
     QPushButton *customImageButton = new QPushButton("Custom Image");
@@ -60,7 +60,7 @@ void MainMenu::display(int sw, int sh)
     //setup for arrow buttons
     QImage r_arrow_pic(":/Right.gif");
     QImage l_arrow_pic(":/Left.gif");
-    QSize arrowSize((sw-elephant.width())/2, (sw-elephant.width())/2-10);
+    QSize arrowSize((sw-image.width())/2, (sw-image.width())/2-10);
 
     //create arrow buttons
     QPushButton *left = new QPushButton();
@@ -73,7 +73,7 @@ void MainMenu::display(int sw, int sh)
     right->setFixedSize(arrowSize);
 
     //button sizing
-    customImageButton->setMinimumWidth(elephant.width());
+    customImageButton->setMinimumWidth(image.width());
     singlePlayerButton->setMinimumWidth(sw);
     multiplayerButton->setMinimumWidth(sw);
     highscore->setMinimumWidth(sw);
@@ -115,11 +115,35 @@ void MainMenu::customImage()
 void MainMenu::left()
 {
     qDebug() << "left pressed, switching picture";
+    if(pathsIndex == 0) pathsIndex = paths.size()-1;
+    else pathsIndex--;
+
+    delete imageLabel;
+
+    imageLabel = new QLabel(this);
+    QImage image(paths[pathsIndex]);
+    image = image.scaledToWidth((4.4/6.1)*screenWidth);
+    imageLabel->setPixmap(QPixmap::fromImage(image));
+    imageLabel->resize(image.width(), image.height());
+
+    layout->addWidget(imageLabel, 0, 1, 1, 1, Qt::AlignHCenter);
 }
 
 void MainMenu::right()
 {
     qDebug() << "right pressed, switching picture";
+    if(pathsIndex == paths.size()-1) pathsIndex = 0;
+    else pathsIndex++;
+
+    delete imageLabel;
+
+    imageLabel = new QLabel(this);
+    QImage image(paths[pathsIndex]);
+    image = image.scaledToWidth((4.4/6.1)*screenWidth);
+    imageLabel->setPixmap(QPixmap::fromImage(image));
+    imageLabel->resize(image.width(), image.height());
+
+    layout->addWidget(imageLabel, 0, 1, 1, 1, Qt::AlignHCenter);
 }
 
 void MainMenu::cancel()
@@ -130,7 +154,7 @@ void MainMenu::cancel()
 void MainMenu::makeGame()
 {
     qDebug() << "Making game...";
-    PlayScreen *ps = new PlayScreen(this);
+    PlayScreen *ps = new PlayScreen(paths[pathsIndex], this);
     ps->display(screenWidth, screenHeight);
     qDebug() << "Game made.";
 }

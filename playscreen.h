@@ -1,7 +1,7 @@
 #ifndef PLAYSCREEN_H
 #define PLAYSCREEN_H
 
-#include <QWidget>
+
 #include "tile.h"
 
 #include <QMainWindow>
@@ -9,12 +9,14 @@
 #include <QGraphicsView>
 #include <QGridLayout>
 #include <QLabel>
+#include <QString>
+#include <QWidget>
 
 class PlayScreen : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlayScreen(QWidget *parent = 0);
+    explicit PlayScreen(QString imgPath, QWidget *parent = 0);
     void display(int screenWidth, int screenHeight);
 
 private:
@@ -25,6 +27,7 @@ private:
     void playerWin();
 
     int screenWidth, screenHeight;
+    QString imgPath;
 
     QGraphicsView *gView;
     QGridLayout *layout;

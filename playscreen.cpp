@@ -10,9 +10,9 @@
 #include <math.h>
 #include <QDebug>
 
-PlayScreen::PlayScreen(QWidget *parent) : QWidget(parent)
+PlayScreen::PlayScreen(QString imgPath, QWidget *parent) : QWidget(parent)
 {
-
+    this->imgPath = imgPath;
 }
 
 
@@ -52,7 +52,7 @@ void PlayScreen::display(int screenWidth, int screenHeight)
     menuGrid->addWidget(percentLabel,0,2);
 
     //import image
-    QImageReader reader(":/elephant.gif");
+    QImageReader reader(imgPath);
     reader.setScaledSize(QSize(screenWidth, screenWidth));
     QImage elephant = reader.read();
     int eHeight = elephant.height();
