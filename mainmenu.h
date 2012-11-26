@@ -21,9 +21,12 @@ signals:
     
 public slots:
     void makeGame();
+    void makeMultiplayerGame();
     void makeHighscore();
     void customImage();
     void cancel();
+    void left();
+    void right();
     
 };
 

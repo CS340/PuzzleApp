@@ -205,4 +205,5 @@ void PlayScreen::playerWin()
     qDebug() << "player won.";
     win_menu *wm = new win_menu(this);
     wm->display(screenWidth, screenHeight);
+    wm->raise();
 }

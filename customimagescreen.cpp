@@ -108,7 +108,7 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
     //cancel button
     QPushButton *cancel = new QPushButton("Cancel", gView);
     layout->addWidget(cancel, 4, 0);
-    connect(cancel, SIGNAL(clicked()), mainMenu, SIGNAL(cancel()));
+    connect(cancel, SIGNAL(clicked()), mainMenu, SLOT(cancel()));
 
     gView->show();
     this->show();
