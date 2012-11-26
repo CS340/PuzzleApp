@@ -5,5 +5,9 @@
         <file>Left.gif</file>
         <file>Right.gif</file>
         <file>animated-fireworks.gif</file>
+        <file>chameleon.jpg</file>
+        <file>dog.jpg</file>
+        <file>sandwich.jpg</file>
+        <file>smiley.jpg</file>
     </qresource>
 </RCC>

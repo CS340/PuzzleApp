@@ -20,6 +20,10 @@ MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
 {
     pathsIndex = 0;
     paths.push_back(QString(":/elephant.gif"));
+    paths.push_back(QString(":/chameleon.jpg"));
+    paths.push_back(QString(":/sandwich.jpg"));
+    paths.push_back(QString(":/dog.jpg"));
+    paths.push_back(QString(":/smiley.jpg"));
 }
 
 MainMenu::MainMenu(QString path, QWidget *parent) : QWidget(parent)
@@ -27,6 +31,10 @@ MainMenu::MainMenu(QString path, QWidget *parent) : QWidget(parent)
     pathsIndex = 0;
     paths.push_back(path);
     paths.push_back(QString(":/elephant.gif"));
+    paths.push_back(QString(":/chameleon.jpg"));
+    paths.push_back(QString(":/sandwich.jpg"));
+    paths.push_back(QString(":/dog.jpg"));
+    paths.push_back(QString(":/smiley.jpg"));
 }
 
 void MainMenu::display(int sw, int sh)
