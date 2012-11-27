@@ -1,6 +1,7 @@
 #include "playscreen.h"
 #include "tile.h"
 #include "win_menu.h"
+#include "mainmenu.h"
 
 #include <QLabel>
 #include <QImageReader>
@@ -16,15 +17,16 @@ PlayScreen::PlayScreen(QString imgPath, QWidget *parent) : QWidget(parent)
 }
 
 
-void PlayScreen::display(int screenWidth, int screenHeight)
+void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 {
     this->screenWidth = screenWidth;
     this->screenHeight = screenHeight;
 
-    grid = 5;
+    grid = gridSize;
     numMoves = 0;
     seconds = 0;
     percentComplete = grid*grid;
+    QFont font("Helvectica", 13);
 
     //set up scene and view
     QGraphicsScene *gScene = new QGraphicsScene(this);
@@ -45,24 +47,41 @@ void PlayScreen::display(int screenWidth, int screenHeight)
 
     //timer and move labels
     movesLabel = new QLabel("Moves: " + QString::number(numMoves));
-    menuGrid->addWidget(movesLabel,0,0);
     timerLabel = new QLabel("Time: 0:0");
-    menuGrid->addWidget(timerLabel,0,1);
     percentLabel = new QLabel("Percent: 0%");
-    menuGrid->addWidget(percentLabel,0,2);
+    menuGrid->addWidget(movesLabel,0,0);
+    menuGrid->addWidget(timerLabel,1,0);
+    menuGrid->addWidget(percentLabel,2,0);
+    movesLabel->setFont(font);
+    timerLabel->setFont(font);
+    percentLabel->setFont(font);
+
+    //menu buttons
+    QPushButton *mainMenuButton = new QPushButton("Main Menu");
+    QPushButton *pauseButton = new QPushButton("Pause");
+    QPushButton *giveUpButton = new QPushButton("Give Up");
+    menuGrid->addWidget(mainMenuButton, 0, 1);
+    menuGrid->addWidget(pauseButton, 1, 1);
+    menuGrid->addWidget(giveUpButton, 2, 1);
+    mainMenuButton->setFont(font);
+    pauseButton->setFont(font);
+    giveUpButton->setFont(font);
+    connect(mainMenuButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
+    connect(pauseButton, SIGNAL(clicked()), this, SLOT(pauseButtonClicked()));
+    connect(giveUpButton, SIGNAL(clicked()), this, SLOT(giveUpButtonClicked()));
 
     //import image
     QImageReader reader(imgPath);
     reader.setScaledSize(QSize(screenWidth, screenWidth));
-    QImage elephant = reader.read();
-    int eHeight = elephant.height();
-    int eWidth = elephant.width();
+    QImage image = reader.read();
+    int eHeight = image.height();
+    int eWidth = image.width();
 
     //cut image into tiles and position them
     for(int i = 0; i < grid; i++){
         for(int j = 0; j < grid; j++){
             if(!(i==grid-1 && j==grid-1)){
-                QPixmap pixmap = QPixmap::fromImage(elephant.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
+                QPixmap pixmap = QPixmap::fromImage(image.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
                 QIcon icon(pixmap);
                 Tile *button = new Tile(i, j, icon);
                 button->setIconSize(QSize(eWidth/grid, eHeight/grid));
@@ -89,11 +108,7 @@ void PlayScreen::display(int screenWidth, int screenHeight)
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
 
-
     shuffle();
-
-    playerWin();//-------------------THIS DOESNT WORK!
-    qDebug() << "after playerwin";
 
     if(percentComplete == grid*grid)
     {
@@ -104,8 +119,11 @@ void PlayScreen::display(int screenWidth, int screenHeight)
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(1000);
 
-    percentLabel->setText("Percent Complete: " + QString::number(calculatePercent()) + "%");
+    percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
 
+    qDebug() << "before playerwin";
+    playerWin();//<------------------------------------------------------------------------THIS DOESNT WORK!
+    qDebug() << "after playerwin";
 
     gView->show();
 }
@@ -179,6 +197,9 @@ void PlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     {
         percentComplete++;
     }
+
+    if(calculatePercent() == 100)
+        playerWin();
 }
 
 void PlayScreen::update()
@@ -198,6 +219,39 @@ void PlayScreen::handleTileClick(Tile* t)
         percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
         qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
     }
+}
+
+void PlayScreen::mainMenuButtonClicked()
+{
+    qDebug() << "main menu button clicked.";
+    MainMenu *mm = new MainMenu(this);
+    mm->display(screenWidth, screenHeight);
+    mm->raise();
+}
+
+void PlayScreen::pauseButtonClicked()
+{
+    qDebug() << "pause button clicked.";
+    //<-----------------------------------------------------------------------------------------------do pause stuff
+}
+
+void PlayScreen::giveUpButtonClicked()//<-------------------------------------------------------------FIX THIS
+{
+    qDebug() << "give up button clicked.";
+    QWidget *loseScreen = new QWidget(this);
+    QGridLayout *loseLayout = new QGridLayout();
+    loseScreen->setLayout(loseLayout);
+
+    QLabel *imgLabel = new QLabel();
+    imgLabel->setPixmap(QPixmap::fromImage(image));
+    loseLayout->addWidget(imgLabel, 0, 0);
+
+    QPushButton *mmButton = new QPushButton();
+    loseLayout->addWidget(mmButton, 1, 0);
+    connect(mmButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
+
+    loseScreen->show();
+    loseScreen->raise();
 }
 
 void PlayScreen::playerWin()

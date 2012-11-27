@@ -81,7 +81,7 @@ void MainMenu::display(int sw, int sh)
     right->setFixedSize(arrowSize);
 
     //button sizing
-    customImageButton->setMinimumWidth(image.width());
+    //customImageButton->setMinimumWidth(image.width());
     singlePlayerButton->setMinimumWidth(sw);
     multiplayerButton->setMinimumWidth(sw);
     highscore->setMinimumWidth(sw);

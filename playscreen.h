@@ -17,7 +17,7 @@ class PlayScreen : public QWidget
     Q_OBJECT
 public:
     explicit PlayScreen(QString imgPath, QWidget *parent = 0);
-    void display(int screenWidth, int screenHeight);
+    void display(int screenWidth, int screenHeight, int gridSize = 5);
 
 private:
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
@@ -28,6 +28,7 @@ private:
 
     int screenWidth, screenHeight;
     QString imgPath;
+    QImage image;
 
     QGraphicsView *gView;
     QGridLayout *layout;
@@ -46,6 +47,9 @@ private:
 private slots:
     void handleTileClick(Tile*);
     void update();
+    void mainMenuButtonClicked();
+    void pauseButtonClicked();
+    void giveUpButtonClicked();
 };
 
 #endif // PLAYSCREEN_H

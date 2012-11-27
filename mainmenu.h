@@ -22,6 +22,7 @@ private:
     QLabel *imageLabel;
     std::vector<QString> paths;
     QGridLayout *layout;
+    int gridSize;
 
 signals:
     

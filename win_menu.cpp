@@ -11,7 +11,8 @@ win_menu::win_menu(QWidget *parent) : QWidget(parent)
 
 }
 
-void win_menu::display (int sw, int sh){
+void win_menu::display (int sw, int sh)
+{
     screen_height = sh;
     screen_width = sw;
 
@@ -54,7 +55,7 @@ void win_menu::display (int sw, int sh){
     connect(quit, SIGNAL(clicked()), this, SLOT(quitClicked()));
 
     win_widget->show();
-
+    win_widget->raise();
 }
 
 void win_menu::mainMenuClicked()
