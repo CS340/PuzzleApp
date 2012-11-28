@@ -27,6 +27,7 @@ NetworkPlayScreen::NetworkPlayScreen(QString imgPath, MainWindow *mainWindow, QW
 
 void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 {
+    makeCon();;
     this->screenWidth = screenWidth;
     this->screenHeight = screenHeight;
 
@@ -288,7 +289,7 @@ void NetworkPlayScreen::playerWin()
 void NetworkPlayScreen::makeCon()
 {
     qDebug() << "Connecting...";
-    socket->connectToHost("10.8.200.211", 4848);
+    socket->connectToHost("10.107.206.194", 4849, QIODevice::Truncate);
 
     if(!socket->waitForConnected(1000))
     {
@@ -307,7 +308,7 @@ QString NetworkPlayScreen::parseResponse(QString s)
 void NetworkPlayScreen::connected()
 {
     qDebug() << "Connected";
-    socket->write("score:get:all\n");
+    socket->write("new:aphelps");
 
 }
 
