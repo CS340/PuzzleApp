@@ -20,7 +20,8 @@ SOURCES += main.cpp mainwindow.cpp \
     customimagescreen.cpp \
     customimagebutton.cpp \
     win_menu.cpp \
-    gridsizescreen.cpp
+    gridsizescreen.cpp \
+    usernamescreen.cpp
 HEADERS += mainwindow.h \
     tile.h \
     playscreen.h \
@@ -30,7 +31,8 @@ HEADERS += mainwindow.h \
     customimagescreen.h \
     customimagebutton.h \
     win_menu.h \
-    gridsizescreen.h
+    gridsizescreen.h \
+    usernamescreen.h
 FORMS += mainwindow.ui
 
 # Please do not modify the following two lines. Required for deployment.

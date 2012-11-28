@@ -9,5 +9,6 @@
         <file>dog.jpg</file>
         <file>sandwich.jpg</file>
         <file>smiley.jpg</file>
+        <file>user.name</file>
     </qresource>
 </RCC>
