@@ -20,12 +20,15 @@ public:
     explicit PlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent = 0);
     void display(int screenWidth, int screenHeight, int gridSize = 5);
 
+signals:
+    void win();
+
 private:
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
     void swapTiles(Tile *tile1, Tile *tile2);
     void shuffle();
     int calculatePercent();
-    void playerWin();
+
 
     int screenWidth, screenHeight;
     QString imgPath;
@@ -52,6 +55,7 @@ private slots:
     void mainMenuButtonClicked();
     void pauseButtonClicked();
     void giveUpButtonClicked();
+    void playerWin();
 };
 
 #endif // PLAYSCREEN_H

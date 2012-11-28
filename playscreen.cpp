@@ -58,7 +58,7 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
     percentLabel->setFont(font);
 
     //menu buttons
-    QPushButton *mainMenuButton = new QPushButton("Main Menu");
+    QPushButton *mainMenuButton = new QPushButton("DEBUG WIN");
     QPushButton *pauseButton = new QPushButton("Pause/Play");
     QPushButton *giveUpButton = new QPushButton("Give Up");
     menuGrid->addWidget(mainMenuButton, 0, 1);
@@ -123,7 +123,8 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
     percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
 
     qDebug() << "before playerwin";
-    playerWin();//<------------------------------------------------------------------------THIS DOESNT WORK!
+    connect(this, SIGNAL(win()), this, SLOT(playerWin()));
+    emit win();//<------------------------------------------------------------------------THIS DOESNT WORK!
     qDebug() << "after playerwin";
 
     gView->show();
@@ -228,9 +229,8 @@ void PlayScreen::handleTileClick(Tile* t)
 void PlayScreen::mainMenuButtonClicked()
 {
     qDebug() << "main menu button clicked.";
-    MainMenu *mm = new MainMenu(mainWindow, mainWindow);
-    mm->display(screenWidth, screenHeight);
-    mm->raise();
+    win_menu *wm = new win_menu(mainWindow, mainWindow);
+    wm->display(screenWidth, screenHeight);
 }
 
 void PlayScreen::pauseButtonClicked()
@@ -249,27 +249,32 @@ void PlayScreen::pauseButtonClicked()
 
 void PlayScreen::giveUpButtonClicked()//<-------------------------------------------------------------FIX THIS
 {
-    delete gView;
-    qDebug() << "give up button clicked.";
-    QWidget *loseScreen = new QWidget(this);
-    QGridLayout *loseLayout = new QGridLayout();
-    loseScreen->setLayout(loseLayout);
+//    delete gView;
+//    qDebug() << "give up button clicked.";
+//    QWidget *loseScreen = new QWidget(this);
+//    QGridLayout *loseLayout = new QGridLayout();
+//    loseScreen->setLayout(loseLayout);
 
-    QLabel *imgLabel = new QLabel();
-    imgLabel->setPixmap(QPixmap::fromImage(image));
-    loseLayout->addWidget(imgLabel, 0, 0);
+//    QLabel *imgLabel = new QLabel();
+//    imgLabel->setPixmap(QPixmap::fromImage(image));
+//    loseLayout->addWidget(imgLabel, 0, 0);
 
-    QPushButton *mmButton = new QPushButton();
-    loseLayout->addWidget(mmButton, 1, 0);
-    connect(mmButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
+//    QPushButton *mmButton = new QPushButton();
+//    loseLayout->addWidget(mmButton, 1, 0);
+//    connect(mmButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
 
-    loseScreen->show();
-    loseScreen->raise();
+//    loseScreen->show();
+//    loseScreen->raise();
+
+    MainMenu *mm = new MainMenu(mainWindow, mainWindow);
+    mm->display(screenWidth, screenHeight);
+    mm->raise();
+
 }
 
 void PlayScreen::playerWin()
 {
     qDebug() << "player won.";
-    win_menu *wm = new win_menu(mainWindow);
+    win_menu *wm = new win_menu(mainWindow, mainWindow);
     wm->display(screenWidth, screenHeight);
 }
