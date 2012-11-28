@@ -237,6 +237,7 @@ void PlayScreen::pauseButtonClicked()
 
 void PlayScreen::giveUpButtonClicked()//<-------------------------------------------------------------FIX THIS
 {
+    delete gView;
     qDebug() << "give up button clicked.";
     QWidget *loseScreen = new QWidget(this);
     QGridLayout *loseLayout = new QGridLayout();
@@ -257,7 +258,6 @@ void PlayScreen::giveUpButtonClicked()//<---------------------------------------
 void PlayScreen::playerWin()
 {
     qDebug() << "player won.";
-    win_menu *wm = new win_menu(this);
+    win_menu *wm = new win_menu(this->parentWidget());
     wm->display(screenWidth, screenHeight);
-    wm->raise();
 }

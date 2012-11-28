@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "mainmenu.h"
 #include "win_menu.h"
+#include "gridsizescreen.h"
 
 #include <QApplication>
 #include<QDesktopWidget>
@@ -22,8 +23,7 @@ int main(int argc, char *argv[])
     MainMenu *mm = new MainMenu(&mainWindow);
     mm->display(screenWidth, screenHeight);
 
-//    win_menu *wm = new win_menu(&mainWindow);
-//    wm->display(screenWidth, screenHeight);
+
 
     return app.exec();
 }

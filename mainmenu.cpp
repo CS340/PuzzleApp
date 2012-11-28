@@ -3,6 +3,7 @@
 #include "highscorescreen.h"
 #include "customimagescreen.h"
 #include "networkplayscreen.h"
+#include "gridsizescreen.h"
 
 #include <QApplication>
 #include <QLabel>
@@ -161,10 +162,14 @@ void MainMenu::cancel()
 
 void MainMenu::makeGame()
 {
-    qDebug() << "Making game...";
-    PlayScreen *ps = new PlayScreen(paths[pathsIndex], this);
-    ps->display(screenWidth, screenHeight);
-    qDebug() << "Game made.";
+//    qDebug() << "Making game...";
+//    PlayScreen *ps = new PlayScreen(paths[pathsIndex], this);
+//    ps->display(screenWidth, screenHeight);
+//    qDebug() << "Game made.";
+    GridSizeScreen *gss = new GridSizeScreen(paths[pathsIndex], this->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+    gss->display(screenWidth, screenHeight);
+    this->lower();
+    gss->raise();
 }
 
 void MainMenu::makeMultiplayerGame()
