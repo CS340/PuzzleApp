@@ -19,6 +19,7 @@ private:
 
     QTcpSocket *socket;
     bool all;
+    bool checkNext;
     QString myScoreString;
     QString allScoreString;
     QLabel *allScoreLabel;
@@ -26,13 +27,14 @@ private:
 
 signals:
     
-public slots:
+private slots:
     void connected();
     void disconnected();
     void bytesWritten(qint64 bytes);
     void readyRead();
     void mineScores();
     void allScores();
+    void refresh();
 };
 
 #endif // HIGHSCORESCREEN_H
