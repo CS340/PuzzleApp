@@ -6,9 +6,9 @@
 #include <QPushButton>
 #include <QDebug>
 
-win_menu::win_menu(QWidget *parent) : QWidget(parent)
+win_menu::win_menu(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
-
+    this->mainWindow = mainWindow;
 }
 
 void win_menu::display (int sw, int sh)
@@ -61,7 +61,7 @@ void win_menu::display (int sw, int sh)
 void win_menu::mainMenuClicked()
 {
     qDebug() << "main menu clicked.";
-    MainMenu *mm = new MainMenu(this);
+    MainMenu *mm = new MainMenu(mainWindow, mainWindow);
     mm->display(screen_width, screen_height);
 }
 

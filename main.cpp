@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     mainWindow.resize(screenWidth, screenHeight);
     mainWindow.showExpanded();
 
-    MainMenu *mm = new MainMenu(&mainWindow);
+    MainMenu *mm = new MainMenu(&mainWindow, &mainWindow);
     mm->display(screenWidth, screenHeight);
 
 

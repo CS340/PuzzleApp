@@ -17,8 +17,9 @@
 #include <QDebug>
 
 
-MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
+MainMenu::MainMenu(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
+    this->mainWindow = mainWindow;
     pathsIndex = 0;
     paths.push_back(QString(":/elephant.gif"));
     paths.push_back(QString(":/chameleon.jpg"));
@@ -27,8 +28,9 @@ MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
     paths.push_back(QString(":/smiley.jpg"));
 }
 
-MainMenu::MainMenu(QString path, QWidget *parent) : QWidget(parent)
+MainMenu::MainMenu(QString path, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
+    this->mainWindow = mainWindow;
     pathsIndex = 0;
     paths.push_back(path);
     paths.push_back(QString(":/elephant.gif"));
@@ -116,7 +118,7 @@ void MainMenu::display(int sw, int sh)
 void MainMenu::customImage()
 {
     qDebug() << "Making custom image";
-    CustomImageScreen *cis = new CustomImageScreen(this, this);
+    CustomImageScreen *cis = new CustomImageScreen(this ,mainWindow, mainWindow);
     cis->display(screenWidth, screenHeight);
     qDebug() << "custom image made";
 }
@@ -166,7 +168,7 @@ void MainMenu::makeGame()
 //    PlayScreen *ps = new PlayScreen(paths[pathsIndex], this);
 //    ps->display(screenWidth, screenHeight);
 //    qDebug() << "Game made.";
-    GridSizeScreen *gss = new GridSizeScreen(paths[pathsIndex], this->parentWidget()->parentWidget()->parentWidget()->parentWidget());
+    GridSizeScreen *gss = new GridSizeScreen(paths[pathsIndex], mainWindow);
     gss->display(screenWidth, screenHeight);
     this->lower();
     gss->raise();

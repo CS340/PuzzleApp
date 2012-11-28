@@ -11,9 +11,10 @@
 #include <math.h>
 #include <QDebug>
 
-PlayScreen::PlayScreen(QString imgPath, QWidget *parent) : QWidget(parent)
+PlayScreen::PlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     this->imgPath = imgPath;
+    this->mainWindow = mainWindow;
 }
 
 
@@ -224,7 +225,7 @@ void PlayScreen::handleTileClick(Tile* t)
 void PlayScreen::mainMenuButtonClicked()
 {
     qDebug() << "main menu button clicked.";
-    MainMenu *mm = new MainMenu(this);
+    MainMenu *mm = new MainMenu(mainWindow, mainWindow);
     mm->display(screenWidth, screenHeight);
     mm->raise();
 }
@@ -258,6 +259,6 @@ void PlayScreen::giveUpButtonClicked()//<---------------------------------------
 void PlayScreen::playerWin()
 {
     qDebug() << "player won.";
-    win_menu *wm = new win_menu(this->parentWidget());
+    win_menu *wm = new win_menu(mainWindow);
     wm->display(screenWidth, screenHeight);
 }

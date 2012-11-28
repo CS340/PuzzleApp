@@ -10,9 +10,10 @@
 #include <QLabel>
 #include <QDebug>
 
-CustomImageScreen::CustomImageScreen(MainMenu *mm, QWidget *parent) : QWidget(parent)
+CustomImageScreen::CustomImageScreen(MainMenu *mm, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     mainMenu = mm;
+    this->mainWindow = mainWindow;
 }
 
 void CustomImageScreen::display(int screenWidth, int screenHeight)
@@ -117,6 +118,6 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
 void CustomImageScreen::customImageChosen(QString path)
 {
     qDebug() << "custom image chosen";
-    MainMenu *mm = new MainMenu(path, this);
+    MainMenu *mm = new MainMenu(path, mainWindow, mainWindow);
     mm->display(screenWidth, screenHeight);
 }

@@ -3,6 +3,7 @@
 
 
 #include "tile.h"
+#include "mainwindow.h"
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -16,7 +17,7 @@ class PlayScreen : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PlayScreen(QString imgPath, QWidget *parent = 0);
+    explicit PlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent = 0);
     void display(int screenWidth, int screenHeight, int gridSize = 5);
 
 private:
@@ -29,6 +30,7 @@ private:
     int screenWidth, screenHeight;
     QString imgPath;
     QImage image;
+    MainWindow *mainWindow;
 
     QGraphicsView *gView;
     QGridLayout *layout;

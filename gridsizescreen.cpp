@@ -4,13 +4,14 @@
 #include <QFont>
 #include <QDebug>
 
-GridSizeScreen::GridSizeScreen(QWidget *parent) : QWidget(parent)
+GridSizeScreen::GridSizeScreen(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
-
+    this->mainWindow = mainWindow;
 }
 
-GridSizeScreen::GridSizeScreen(QString path, QWidget *parent) : QWidget(parent)
+GridSizeScreen::GridSizeScreen(QString path, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
+    this->mainWindow = mainWindow;
     this->path = path;
 }
 
@@ -79,56 +80,56 @@ void GridSizeScreen::display(int screenWidth, int screenHeight)
 
 void GridSizeScreen::b3Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow, mainWindow);
     ps->display(screenWidth, screenHeight, 3);
     ps->raise();
 }
 
 void GridSizeScreen::b4Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow);
     ps->display(screenWidth, screenHeight, 4);
     ps->raise();
 }
 
 void GridSizeScreen::b5Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow);
     ps->display(screenWidth, screenHeight, 5);
     ps->raise();
 }
 
 void GridSizeScreen::b6Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow);
     ps->display(screenWidth, screenHeight, 6);
     ps->raise();
 }
 
 void GridSizeScreen::b7Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow);
     ps->display(screenWidth, screenHeight, 7);
     ps->raise();
 }
 
 void GridSizeScreen::b8Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow);
     ps->display(screenWidth, screenHeight, 8);
     ps->raise();
 }
 
 void GridSizeScreen::b9Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow);
     ps->display(screenWidth, screenHeight, 9);
     ps->raise();
 }
 
 void GridSizeScreen::b10Pushed()
 {
-    PlayScreen *ps = new PlayScreen(path, this);
+    PlayScreen *ps = new PlayScreen(path, mainWindow);
     ps->display(screenWidth, screenHeight, 10);
     ps->raise();
 }
