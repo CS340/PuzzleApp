@@ -58,7 +58,7 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 
     //menu buttons
     QPushButton *mainMenuButton = new QPushButton("Main Menu");
-    QPushButton *pauseButton = new QPushButton("Pause");
+    QPushButton *pauseButton = new QPushButton("Pause/Play");
     QPushButton *giveUpButton = new QPushButton("Give Up");
     menuGrid->addWidget(mainMenuButton, 0, 1);
     menuGrid->addWidget(pauseButton, 1, 1);
@@ -210,14 +210,17 @@ void PlayScreen::update()
 
 void PlayScreen::handleTileClick(Tile* t)
 {
-    if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
+    if(timer->isActive())
     {
-        //qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
-        swapTiles(t, hiddenTile);
-        //qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
-        movesLabel->setText("Moves: " + QString::number(++numMoves));
-        percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
-        qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
+        if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
+        {
+            //qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+            swapTiles(t, hiddenTile);
+            //qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+            movesLabel->setText("Moves: " + QString::number(++numMoves));
+            percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
+            qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
+        }
     }
 }
 
@@ -232,6 +235,14 @@ void PlayScreen::mainMenuButtonClicked()
 void PlayScreen::pauseButtonClicked()
 {
     qDebug() << "pause button clicked.";
+    if(timer->isActive())
+    {
+        timer->stop();
+    }
+    else
+    {
+        timer->start();
+    }
     //<-----------------------------------------------------------------------------------------------do pause stuff
 }
 
