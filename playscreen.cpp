@@ -17,7 +17,6 @@ PlayScreen::PlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent)
     this->mainWindow = mainWindow;
 }
 
-
 void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 {
     this->screenWidth = screenWidth;

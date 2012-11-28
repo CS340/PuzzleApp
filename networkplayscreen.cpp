@@ -1,5 +1,8 @@
 #include "networkplayscreen.h"
 #include "tile.h"
+#include "win_menu.h"
+#include "mainmenu.h"
+
 #include <QLabel>
 #include <QImageReader>
 #include <QGridLayout>
@@ -8,18 +11,30 @@
 #include <math.h>
 #include <QDebug>
 
-NetworkPlayScreen::NetworkPlayScreen(QWidget *parent) :
-    QWidget(parent)
+NetworkPlayScreen::NetworkPlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
+    this->imgPath = imgPath;
+    this->mainWindow = mainWindow;
+
+    socket = new QTcpSocket(this);
+
+    connect(socket, SIGNAL(connected()), this, SLOT(connected()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
 
 }
 
-void NetworkPlayScreen::display(int screenWidth, int screenHeight)
+void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 {
-    grid = 5;
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
+
+    grid = gridSize;
     numMoves = 0;
     seconds = 0;
     percentComplete = grid*grid;
+    QFont font("Helvectica", 13);
 
     //set up scene and view
     QGraphicsScene *gScene = new QGraphicsScene(this);
@@ -40,24 +55,41 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight)
 
     //timer and move labels
     movesLabel = new QLabel("Moves: " + QString::number(numMoves));
-    menuGrid->addWidget(movesLabel,0,0);
     timerLabel = new QLabel("Time: 0:0");
-    menuGrid->addWidget(timerLabel,0,1);
     percentLabel = new QLabel("Percent: 0%");
-    menuGrid->addWidget(percentLabel,0,2);
+    menuGrid->addWidget(movesLabel,0,0);
+    menuGrid->addWidget(timerLabel,1,0);
+    menuGrid->addWidget(percentLabel,2,0);
+    movesLabel->setFont(font);
+    timerLabel->setFont(font);
+    percentLabel->setFont(font);
+
+    //menu buttons
+    QPushButton *mainMenuButton = new QPushButton("DEBUG WIN");
+    QPushButton *pauseButton = new QPushButton("Pause/Play");
+    QPushButton *giveUpButton = new QPushButton("Give Up");
+    menuGrid->addWidget(mainMenuButton, 0, 1);
+    menuGrid->addWidget(pauseButton, 1, 1);
+    menuGrid->addWidget(giveUpButton, 2, 1);
+    mainMenuButton->setFont(font);
+    pauseButton->setFont(font);
+    giveUpButton->setFont(font);
+    connect(mainMenuButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
+    connect(pauseButton, SIGNAL(clicked()), this, SLOT(pauseButtonClicked()));
+    connect(giveUpButton, SIGNAL(clicked()), this, SLOT(giveUpButtonClicked()));
 
     //import image
-    QImageReader reader(":/elephant.gif");
+    QImageReader reader(imgPath);
     reader.setScaledSize(QSize(screenWidth, screenWidth));
-    QImage elephant = reader.read();
-    int eHeight = elephant.height();
-    int eWidth = elephant.width();
+    QImage image = reader.read();
+    int eHeight = image.height();
+    int eWidth = image.width();
 
     //cut image into tiles and position them
     for(int i = 0; i < grid; i++){
         for(int j = 0; j < grid; j++){
             if(!(i==grid-1 && j==grid-1)){
-                QPixmap pixmap = QPixmap::fromImage(elephant.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
+                QPixmap pixmap = QPixmap::fromImage(image.copy(i*(eWidth/grid), j*(eHeight/grid), eWidth/grid, eHeight/grid));
                 QIcon icon(pixmap);
                 Tile *button = new Tile(i, j, icon);
                 button->setIconSize(QSize(eWidth/grid, eHeight/grid));
@@ -78,16 +110,14 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight)
     //grid sizing
     for(int i=0; i<layout->columnCount(); i++)
         layout->setColumnMinimumWidth(i, screenWidth);
-
     layout->setRowMinimumHeight(1, screenHeight-screenWidth);
-
     for(int i=0; i<playGrid->rowCount(); i++){
         playGrid->setColumnMinimumWidth(i, screenWidth/grid);
         playGrid->setRowMinimumHeight(i, screenWidth/grid);
     }
 
-
     shuffle();
+
     if(percentComplete == grid*grid)
     {
         playerWin();
@@ -97,31 +127,23 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight)
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(1000);
 
-    percentLabel->setText("Percent Complete: " + QString::number(calculatePercent()) + "%");
+    percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
+
+    qDebug() << "before playerwin";
+    connect(this, SIGNAL(win()), this, SLOT(playerWin()));
+    emit win();//<------------------------------------------------------------------------THIS DOESNT WORK!
+    qDebug() << "after playerwin";
 
     gView->show();
 }
 
 int NetworkPlayScreen::calculatePercent()
 {
-    /*int total = grid*grid;
-    int inplace = 0;
-    for(int i = 0; i < grid - 1; i++)
+    if(percentComplete == 0)
     {
-        for(int j = 0; j < grid - 1; j++)
-        {
-            if(!(i == grid - 1 && j == grid - 1))
-            {
-                Tile *g = dynamic_cast<Tile*>(playGrid->itemAtPosition(i,j)->widget());
-                if(g->getInitX() == i && g->getInitY() == j)
-                {
-                    inplace++;
-                }
-            }
-        }
-    }*/
-
-    return (int)(100.00 * ((float)percentComplete/(float)(grid*grid)));
+        return 0;
+    }
+    return (int)(100.00 * ((float)percentComplete/(float)(grid*grid))) + 1;
 }
 
 void NetworkPlayScreen::shuffle()
@@ -184,6 +206,11 @@ void NetworkPlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     {
         percentComplete++;
     }
+
+    if(calculatePercent() == 100)
+    {
+        playerWin();
+    }
 }
 
 void NetworkPlayScreen::update()
@@ -205,7 +232,97 @@ void NetworkPlayScreen::handleTileClick(Tile* t)
     }
 }
 
+void NetworkPlayScreen::mainMenuButtonClicked()
+{
+    qDebug() << "main menu button clicked.";
+    win_menu *wm = new win_menu(mainWindow, mainWindow);
+    wm->display(screenWidth, screenHeight);
+}
+
+void NetworkPlayScreen::pauseButtonClicked()
+{
+    qDebug() << "pause button clicked.";
+    if(timer->isActive())
+    {
+        timer->stop();
+    }
+    else
+    {
+        timer->start();
+    }
+    //<-----------------------------------------------------------------------------------------------do pause stuff
+}
+
+void NetworkPlayScreen::giveUpButtonClicked()//<-------------------------------------------------------------FIX THIS
+{
+//    delete gView;
+//    qDebug() << "give up button clicked.";
+//    QWidget *loseScreen = new QWidget(this);
+//    QGridLayout *loseLayout = new QGridLayout();
+//    loseScreen->setLayout(loseLayout);
+
+//    QLabel *imgLabel = new QLabel();
+//    imgLabel->setPixmap(QPixmap::fromImage(image));
+//    loseLayout->addWidget(imgLabel, 0, 0);
+
+//    QPushButton *mmButton = new QPushButton();
+//    loseLayout->addWidget(mmButton, 1, 0);
+//    connect(mmButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
+
+//    loseScreen->show();
+//    loseScreen->raise();
+
+    MainMenu *mm = new MainMenu(mainWindow, mainWindow);
+    mm->display(screenWidth, screenHeight);
+    mm->raise();
+
+}
+
 void NetworkPlayScreen::playerWin()
 {
+    qDebug() << "player won.";
+    win_menu *wm = new win_menu(mainWindow, mainWindow);
+    wm->display(screenWidth, screenHeight);
+}
 
+void NetworkPlayScreen::makeCon()
+{
+    qDebug() << "Connecting...";
+    socket->connectToHost("10.8.200.211", 4848);
+
+    if(!socket->waitForConnected(1000))
+    {
+        qDebug() << "ERROR: " << socket->errorString();
+    }
+}
+
+QString NetworkPlayScreen::parseResponse(QString s)
+{
+    QStringList parts = s.split(":");
+    QString result;
+
+    return result;
+}
+
+void NetworkPlayScreen::connected()
+{
+    qDebug() << "Connected";
+    socket->write("score:get:all\n");
+
+}
+
+void NetworkPlayScreen::disconnected()
+{
+    qDebug() << "Disconnected";
+}
+
+void NetworkPlayScreen::bytesWritten(qint64 bytes)
+{
+    qDebug() << "Wrote Something: " << bytes << "bytes";
+}
+
+void NetworkPlayScreen::readyRead()
+{
+    qDebug() << "Reading...";
+    parseResponse(socket->readLine(1024));
 }

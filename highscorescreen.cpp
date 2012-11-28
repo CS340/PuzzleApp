@@ -35,14 +35,13 @@ void HighscoreScreen::display(int screenWidth, int screenHeight)
     allScoreLabel = new QLabel(allScoreString);
     myScoreLabel = new QLabel(myScoreString);
 
-    mineScores();
-    allScores();
-
     layout->addWidget(myScoreLabel,1,0);
     layout->addWidget(allScoreLabel,1,1);
 
-
     this->show();
+
+    //mineScores();
+    //allScores();
 
 }
 

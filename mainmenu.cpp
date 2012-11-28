@@ -177,7 +177,7 @@ void MainMenu::makeGame()
 void MainMenu::makeMultiplayerGame()
 {
     qDebug() << "Making multiplayer game.";
-    NetworkPlayScreen *nps = new NetworkPlayScreen(this);
+    NetworkPlayScreen *nps = new NetworkPlayScreen(paths[pathsIndex], mainWindow, mainWindow);
     nps->display(screenWidth, screenHeight);
     qDebug() << "multiplayer game made.";
 }
@@ -185,7 +185,7 @@ void MainMenu::makeMultiplayerGame()
 void MainMenu::makeHighscore()
 {
     qDebug() << "Making Highscore...";
-    HighscoreScreen *hss = new HighscoreScreen(this);
+    HighscoreScreen *hss = new HighscoreScreen(mainWindow);
     hss->display(screenWidth, screenHeight);
     qDebug() << "Highscore made.";
 }

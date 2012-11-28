@@ -15,8 +15,8 @@ public:
 private:
     void test();
     void makeCon();
-
     QString parseResponse(QString s);
+
     QTcpSocket *socket;
     bool all;
     QString myScoreString;
