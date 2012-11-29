@@ -52,7 +52,7 @@ private:
 private slots:
     void handleTileClick(Tile*);
     void update();
-    void mainMenuButtonClicked();
+    void winButtonClicked();
     void pauseButtonClicked();
     void giveUpButtonClicked();
     void playerWin();

@@ -57,16 +57,16 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
     percentLabel->setFont(font);
 
     //menu buttons
-    QPushButton *mainMenuButton = new QPushButton("DEBUG WIN");
+    QPushButton *winButton = new QPushButton("DEBUG WIN");
     QPushButton *pauseButton = new QPushButton("Pause/Play");
     QPushButton *giveUpButton = new QPushButton("Give Up");
-    menuGrid->addWidget(mainMenuButton, 0, 1);
+    menuGrid->addWidget(winButton, 0, 1);
     menuGrid->addWidget(pauseButton, 1, 1);
     menuGrid->addWidget(giveUpButton, 2, 1);
-    mainMenuButton->setFont(font);
+    winButton->setFont(font);
     pauseButton->setFont(font);
     giveUpButton->setFont(font);
-    connect(mainMenuButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
+    connect(winButton, SIGNAL(clicked()), this, SLOT(winButtonClicked()));
     connect(pauseButton, SIGNAL(clicked()), this, SLOT(pauseButtonClicked()));
     connect(giveUpButton, SIGNAL(clicked()), this, SLOT(giveUpButtonClicked()));
 
@@ -120,11 +120,6 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
     timer->start(1000);
 
     percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
-
-    qDebug() << "before playerwin";
-    connect(this, SIGNAL(win()), this, SLOT(playerWin()));
-    emit win();//<------------------------------------------------------------------------THIS DOESNT WORK!
-    qDebug() << "after playerwin";
 
     gView->show();
 }
@@ -225,7 +220,7 @@ void PlayScreen::handleTileClick(Tile* t)
     }
 }
 
-void PlayScreen::mainMenuButtonClicked()
+void PlayScreen::winButtonClicked()
 {
     qDebug() << "main menu button clicked.";
     win_menu *wm = new win_menu(mainWindow, mainWindow);
@@ -243,28 +238,10 @@ void PlayScreen::pauseButtonClicked()
     {
         timer->start();
     }
-    //<-----------------------------------------------------------------------------------------------do pause stuff
 }
 
-void PlayScreen::giveUpButtonClicked()//<-------------------------------------------------------------FIX THIS
+void PlayScreen::giveUpButtonClicked()
 {
-//    delete gView;
-//    qDebug() << "give up button clicked.";
-//    QWidget *loseScreen = new QWidget(this);
-//    QGridLayout *loseLayout = new QGridLayout();
-//    loseScreen->setLayout(loseLayout);
-
-//    QLabel *imgLabel = new QLabel();
-//    imgLabel->setPixmap(QPixmap::fromImage(image));
-//    loseLayout->addWidget(imgLabel, 0, 0);
-
-//    QPushButton *mmButton = new QPushButton();
-//    loseLayout->addWidget(mmButton, 1, 0);
-//    connect(mmButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
-
-//    loseScreen->show();
-//    loseScreen->raise();
-
     MainMenu *mm = new MainMenu(mainWindow, mainWindow);
     mm->display(screenWidth, screenHeight);
     mm->raise();
