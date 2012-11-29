@@ -41,6 +41,7 @@ private:
     QGridLayout *layout;
     QGridLayout *playGrid;
     QGridLayout *menuGrid;
+
     Tile *hiddenTile;
     int numMoves;
     int seconds;
@@ -49,6 +50,8 @@ private:
     QLabel *movesLabel;
     QLabel *timerLabel;
     QLabel *percentLabel;
+    QLabel *opMovesLabel;
+    QLabel *opPercentLabel;
     QTimer *timer;
 
 signals:

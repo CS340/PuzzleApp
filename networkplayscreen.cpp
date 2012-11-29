@@ -59,18 +59,27 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
     movesLabel = new QLabel("Moves: " + QString::number(numMoves));
     timerLabel = new QLabel("Time: 0:0");
     percentLabel = new QLabel("Percent: 0%");
-    menuGrid->addWidget(movesLabel,0,0);
-    menuGrid->addWidget(timerLabel,1,0);
-    menuGrid->addWidget(percentLabel,2,0);
+    opMovesLabel = new QLabel("0");
+    opPercentLabel = new QLabel("0%");
+
+    menuGrid->addWidget(timerLabel,0,0,2,0, Qt::AlignHCenter);
+    menuGrid->addWidget(new QLabel("Yours"),1,0, Qt::AlignHCenter);
+    menuGrid->addWidget(new QLabel("Opponents"),1,1, Qt::AlignHCenter);
+    menuGrid->addWidget(movesLabel,2,0);
+    menuGrid->addWidget(percentLabel,3,0);
+    menuGrid->addWidget(opMovesLabel, 2,1, Qt::AlignHCenter);
+    menuGrid->addWidget(opPercentLabel, 3,1, Qt::AlignHCenter);
     movesLabel->setFont(font);
     timerLabel->setFont(font);
     percentLabel->setFont(font);
+    opPercentLabel->setFont(font);
+    opMovesLabel->setFont(font);
 
     //menu buttons
     QPushButton *mainMenuButton = new QPushButton("DEBUG WIN");
     QPushButton *giveUpButton = new QPushButton("Give Up");
-    menuGrid->addWidget(mainMenuButton, 0, 1);
-    menuGrid->addWidget(giveUpButton, 2, 1);
+    menuGrid->addWidget(mainMenuButton, 4, 0);
+    menuGrid->addWidget(giveUpButton, 4, 1);
     mainMenuButton->setFont(font);
     giveUpButton->setFont(font);
     connect(mainMenuButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
@@ -123,14 +132,8 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(1000);
 
     percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
-
-    qDebug() << "before playerwin";
-    connect(this, SIGNAL(win()), this, SLOT(playerWin()));
-    emit win();//<------------------------------------------------------------------------THIS DOESNT WORK!
-    qDebug() << "after playerwin";
 
     gView->show();
 }
@@ -221,19 +224,23 @@ void NetworkPlayScreen::handleTileClick(Tile* t)
 {
     if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
     {
-        //qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
-        swapTiles(t, hiddenTile);
-        //qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
-        movesLabel->setText("Moves: " + QString::number(++numMoves));
-        percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
-        qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
-        socket->write((QString("move:") + mainWindow->getUserName() + ":" + gameName + ":" + QString::number(seconds) + ":" + QString::number(numMoves)).toUtf8());
+        if(timer->isActive())
+        {
+            //qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+            swapTiles(t, hiddenTile);
+            //qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+            movesLabel->setText("Moves: " + QString::number(++numMoves));
+            percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
+            qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
+            socket->write((QString("move:") + mainWindow->getUserName() + ":" + gameName + ":" + QString::number(calculatePercent()) + ":" + QString::number(numMoves)).toUtf8());
+        }
     }
 }
 
 void NetworkPlayScreen::mainMenuButtonClicked()
 {
     qDebug() << "main menu button clicked.";
+    socket->write(QString("finished:" + mainWindow->getUserName() + ":" + gameName + ":" + QString::number(seconds) + ":" + QString::number(numMoves)).toUtf8());
     win_menu *wm = new win_menu(mainWindow, mainWindow);
     wm->display(screenWidth, screenHeight);
 }
@@ -266,6 +273,7 @@ void NetworkPlayScreen::giveUpButtonClicked()//<--------------------------------
 void NetworkPlayScreen::playerWin()
 {
     qDebug() << "player won.";
+    socket->write(QString("finished:" + mainWindow->getUserName() + ":" + gameName + ":" + QString::number(seconds) + ":" + QString::number(numMoves)).toUtf8());
     win_menu *wm = new win_menu(mainWindow, mainWindow);
     wm->display(screenWidth, screenHeight);
 }
@@ -289,10 +297,23 @@ QString NetworkPlayScreen::parseResponse(QString s)
     {
         partner = parts[1];
         gameName = parts[2];
+        timer->start(1000);
     }
     else if (parts[0] == "move")
     {
         qDebug() << parts[2] << "::" << parts[3];
+        opMovesLabel->setText(parts[3]);
+        opPercentLabel->setText(parts[2] + QString("%"));
+    }
+    else if (parts[0] == "finished")
+    {
+        qDebug() << "finished";
+        timer->stop();
+        opMovesLabel->setText("You");
+        opPercentLabel->setText("lose");
+        movesLabel->setText("You");
+        percentLabel->setText("lose");
+
     }
     return result;
 }
