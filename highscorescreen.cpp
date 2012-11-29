@@ -1,4 +1,5 @@
 #include "highscorescreen.h"
+#include "mainwindow.h"
 #include <QPushButton>
 #include <QGridLayout>
 #include <QTcpSocket>
@@ -6,8 +7,9 @@
 #include <QLabel>
 #include <QWidget>
 
-HighscoreScreen::HighscoreScreen(QWidget *parent) : QWidget(parent)
+HighscoreScreen::HighscoreScreen(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
+    this->mainWindow = mainWindow;
     all = false;
     checkNext = false;
     myScoreString = "<table cellpadding=\"3\" border=\"1\"><tr><th>Please reload this list</th></tr></table>";
@@ -99,7 +101,7 @@ void HighscoreScreen::connected()
     }
     else
     {
-        socket->write("score:get:aphelps\n");
+        socket->write(QString("score:get:" + mainWindow->getUserName() + "\n").toUtf8());
     }
 }
 

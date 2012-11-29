@@ -1,7 +1,11 @@
 #ifndef HIGHSCORESCREEN_H
 #define HIGHSCORESCREEN_H
 
+<<<<<<< HEAD
 //AUTHORS: Anthony Phelps
+=======
+#include "mainwindow.h"
+>>>>>>> 645c2f367c56e74c8c977f9e9afc6d7b2db22c34
 
 #include <QWidget>
 #include <QTcpSocket>
@@ -11,7 +15,7 @@ class HighscoreScreen : public QWidget
 {
     Q_OBJECT
 public:
-    explicit HighscoreScreen(QWidget *parent = 0);
+    explicit HighscoreScreen(MainWindow *mainWindow, QWidget *parent = 0);
     void display(int screenWidth, int screenHeight);
     
 private:
@@ -19,6 +23,7 @@ private:
     void makeCon();
     QString parseResponse(QString s);
 
+    MainWindow *mainWindow;
     QTcpSocket *socket;
     bool all;
     bool checkNext;

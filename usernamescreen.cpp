@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDir>
+#include <QTcpSocket>
 
 
 // userNameScreen is shown only the first time the app is run.
@@ -17,6 +18,12 @@
 UsernameScreen::UsernameScreen(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     this->mainWindow = mainWindow;
+    socket = new QTcpSocket(this);
+
+    connect(socket, SIGNAL(connected()), this, SLOT(connected()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
 }
 
 void UsernameScreen::display(int screenWidth, int screenHeight)
@@ -79,7 +86,49 @@ void UsernameScreen::okPushed()
     mainWindow->setUserName(text);
     qDebug() << "user.name written.";
 
+    makeCon();
+
     //go to main menu
     MainMenu *mm = new MainMenu(mainWindow, mainWindow);
     mm->display(screenWidth, screenHeight);
+}
+
+QString UsernameScreen::parseResponse(QString s)
+{
+    QStringList parts = s.split(":");
+    QString result;
+
+    return result;
+}
+
+void UsernameScreen::makeCon()
+{
+    qDebug() << "Connecting...";
+    socket->connectToHost("10.107.206.194", 4848);
+    if(!socket->waitForConnected(2000))
+    {
+        qDebug() << "ERROR: " << socket->errorString();
+    }
+}
+
+void UsernameScreen::connected()
+{
+    qDebug() << "Connected";
+    socket->write(QString("user:new:"+ mainWindow->getUserName() + ":_:_" +  "\n").toUtf8());
+}
+
+void UsernameScreen::disconnected()
+{
+    qDebug() << "Disconnected";
+}
+
+void UsernameScreen::bytesWritten(qint64 bytes)
+{
+    qDebug() << "Wrote Something: " << bytes << "bytes";
+}
+
+void UsernameScreen::readyRead()
+{
+    qDebug() << "Reading...";
+    parseResponse(socket->readLine(1024));
 }

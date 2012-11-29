@@ -19,6 +19,13 @@ PlayScreen::PlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent)
 {
     this->imgPath = imgPath;
     this->mainWindow = mainWindow;
+
+    socket = new QTcpSocket(this);
+
+    connect(socket, SIGNAL(connected()), this, SLOT(connected()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
 }
 
 //create all sub-widgets and display everything
@@ -240,6 +247,7 @@ void PlayScreen::handleTileClick(Tile* t)
 void PlayScreen::winButtonClicked()
 {
     qDebug() << "main menu button clicked.";
+    makeCon();
     win_menu *wm = new win_menu(mainWindow, mainWindow);
     wm->display(screenWidth, screenHeight);
 }
@@ -271,6 +279,47 @@ void PlayScreen::giveUpButtonClicked()
 void PlayScreen::playerWin()
 {
     qDebug() << "player won.";
+    makeCon();
     win_menu *wm = new win_menu(mainWindow, mainWindow);
     wm->display(screenWidth, screenHeight);
+}
+
+void PlayScreen::makeCon()
+{
+    qDebug() << "Connecting...";
+    socket->connectToHost("10.107.206.194", 4848);
+    if(!socket->waitForConnected(1000))
+    {
+        qDebug() << "ERROR: " << socket->errorString();
+    }
+}
+
+void PlayScreen::connected()
+{
+    qDebug() << "Connected";
+    socket->write(QString("score:new:" + mainWindow->getUserName() + ":" + QString::number((int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000)) + ":" + "\n").toUtf8());
+}
+
+void PlayScreen::disconnected()
+{
+    qDebug() << "Disconnected";
+}
+
+void PlayScreen::bytesWritten(qint64 bytes)
+{
+    qDebug() << "Wrote Something: " << bytes << "bytes";
+}
+
+void PlayScreen::readyRead()
+{
+    qDebug() << "Reading...";
+    parseResponse(socket->readLine(1024));
+}
+
+QString PlayScreen::parseResponse(QString s)
+{
+    QStringList parts = s.split(":");
+    QString result;
+
+    return result;
 }

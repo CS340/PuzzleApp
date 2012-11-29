@@ -17,6 +17,7 @@ NetworkPlayScreen::NetworkPlayScreen(QString imgPath, MainWindow *mainWindow, QW
     this->mainWindow = mainWindow;
 
     socket = new QTcpSocket(this);
+    socket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
@@ -67,16 +68,12 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 
     //menu buttons
     QPushButton *mainMenuButton = new QPushButton("DEBUG WIN");
-    QPushButton *pauseButton = new QPushButton("Pause/Play");
     QPushButton *giveUpButton = new QPushButton("Give Up");
     menuGrid->addWidget(mainMenuButton, 0, 1);
-    menuGrid->addWidget(pauseButton, 1, 1);
     menuGrid->addWidget(giveUpButton, 2, 1);
     mainMenuButton->setFont(font);
-    pauseButton->setFont(font);
     giveUpButton->setFont(font);
     connect(mainMenuButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
-    connect(pauseButton, SIGNAL(clicked()), this, SLOT(pauseButtonClicked()));
     connect(giveUpButton, SIGNAL(clicked()), this, SLOT(giveUpButtonClicked()));
 
     //import image
@@ -230,6 +227,7 @@ void NetworkPlayScreen::handleTileClick(Tile* t)
         movesLabel->setText("Moves: " + QString::number(++numMoves));
         percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
         qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
+        socket->write((QString("move:") + mainWindow->getUserName() + ":" + gameName + ":" + QString::number(seconds) + ":" + QString::number(numMoves)).toUtf8());
     }
 }
 
@@ -238,20 +236,6 @@ void NetworkPlayScreen::mainMenuButtonClicked()
     qDebug() << "main menu button clicked.";
     win_menu *wm = new win_menu(mainWindow, mainWindow);
     wm->display(screenWidth, screenHeight);
-}
-
-void NetworkPlayScreen::pauseButtonClicked()
-{
-    qDebug() << "pause button clicked.";
-    if(timer->isActive())
-    {
-        timer->stop();
-    }
-    else
-    {
-        timer->start();
-    }
-    //<-----------------------------------------------------------------------------------------------do pause stuff
 }
 
 void NetworkPlayScreen::giveUpButtonClicked()//<-------------------------------------------------------------FIX THIS
@@ -289,7 +273,7 @@ void NetworkPlayScreen::playerWin()
 void NetworkPlayScreen::makeCon()
 {
     qDebug() << "Connecting...";
-    socket->connectToHost("10.107.206.194", 4849, QIODevice::Truncate);
+    socket->connectToHost("10.107.206.194", 4849);
 
     if(!socket->waitForConnected(1000))
     {
@@ -301,14 +285,22 @@ QString NetworkPlayScreen::parseResponse(QString s)
 {
     QStringList parts = s.split(":");
     QString result;
-
+    if(parts[0] == "partner")
+    {
+        partner = parts[1];
+        gameName = parts[2];
+    }
+    else if (parts[0] == "move")
+    {
+        qDebug() << parts[2] << "::" << parts[3];
+    }
     return result;
 }
 
 void NetworkPlayScreen::connected()
 {
     qDebug() << "Connected";
-    socket->write("new:aphelps");
+    socket->write((QString("new:") + mainWindow->getUserName()).toUtf8());
 
 }
 

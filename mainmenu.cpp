@@ -190,7 +190,7 @@ void MainMenu::makeMultiplayerGame()
 void MainMenu::makeHighscore()
 {
     qDebug() << "Making Highscore...";
-    HighscoreScreen *hss = new HighscoreScreen(mainWindow);
+    HighscoreScreen *hss = new HighscoreScreen(mainWindow, mainWindow);
     hss->display(screenWidth, screenHeight);
     qDebug() << "Highscore made.";
 }
