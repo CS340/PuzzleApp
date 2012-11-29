@@ -1,6 +1,8 @@
 #ifndef CUSTOMIMAGESCREEN_H
 #define CUSTOMIMAGESCREEN_H
 
+//AUTHORS: Matt Dumford
+
 #include "mainmenu.h"
 #include "mainwindow.h"
 

@@ -1,6 +1,8 @@
 #ifndef CUSTOMIMAGEBUTTON_H
 #define CUSTOMIMAGEBUTTON_H
 
+//AUTHORS: Matt Dumford
+
 #include <QPushButton>
 
 class customImageButton : public QPushButton

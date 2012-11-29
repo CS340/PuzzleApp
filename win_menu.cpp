@@ -69,8 +69,3 @@ void win_menu::quitClicked()
     qDebug() << "quit clicked.";
     exit(EXIT_FAILURE);
 }
-
-void win_menu::restart()
-{
-
-}

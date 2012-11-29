@@ -11,12 +11,17 @@
 #include <math.h>
 #include <QDebug>
 
+// the playScreen is the screen for the single player game.
+// it takes in the file path to the image the user wants to use
+// and cuts it up into tiles and displays them on the screen with various
+// menu buttons and statistics. It also handles tile clicks and tile swapping.
 PlayScreen::PlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     this->imgPath = imgPath;
     this->mainWindow = mainWindow;
 }
 
+//create all sub-widgets and display everything
 void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 {
     this->screenWidth = screenWidth;
@@ -30,14 +35,14 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 
     //set up scene and view
     QGraphicsScene *gScene = new QGraphicsScene(this);
-    gView = new QGraphicsView(gScene);
+    QGraphicsView *gView = new QGraphicsView(gScene);
     gView->setFixedSize(screenWidth, screenHeight);
     gScene->setBackgroundBrush(Qt::black);
 
     //set up all GridLayouts
-    layout = new QGridLayout(gView);
+    QGridLayout *layout = new QGridLayout(gView);
     playGrid = new QGridLayout();
-    menuGrid = new QGridLayout();
+    QGridLayout *menuGrid = new QGridLayout();
     layout->setContentsMargins(0,0,0,0);
     playGrid->setContentsMargins(0,0,0,0);
     menuGrid->setContentsMargins(0,0,0,0);
@@ -110,11 +115,13 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 
     shuffle();
 
+    //checks if the shuffle resulted in a winning board
     if(percentComplete == grid*grid)
     {
         playerWin();
     }
 
+    //create and set up the timer
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(1000);
@@ -124,6 +131,7 @@ void PlayScreen::display(int screenWidth, int screenHeight, int gridSize)
     gView->show();
 }
 
+//calculate the percent of the puzzle that is complete
 int PlayScreen::calculatePercent()
 {
     if(percentComplete == 0)
@@ -133,6 +141,7 @@ int PlayScreen::calculatePercent()
     return (int)(100.00 * ((float)percentComplete/(float)(grid*grid))) + 1;
 }
 
+//shuffles the tiles into random positions
 void PlayScreen::shuffle()
 {
     for(int i = 0; i < grid; i++)
@@ -159,7 +168,9 @@ void PlayScreen::shuffle()
     }
 }
 
-void PlayScreen::swapTiles(Tile *tile1, Tile *tile2){
+//swaps the positions of two tiles
+void PlayScreen::swapTiles(Tile *tile1, Tile *tile2)
+{
     playGrid->removeWidget(tile1);
     playGrid->removeWidget(tile2);
 
@@ -168,6 +179,7 @@ void PlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     int x2start = tile2->getX();
     int y2start = tile2->getY();
 
+    //swap the tiles
     playGrid->addWidget(tile1, y2start, x2start);
     playGrid->addWidget(tile2, y1start, x1start);
 
@@ -176,6 +188,7 @@ void PlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     tile2->setX(x1start);
     tile2->setY(y1start);
 
+    //update the stats for tiles in the correct positions
     if(x1start == tile1->getInitX() && y1start == tile1->getInitY())
     {
         percentComplete--;
@@ -194,16 +207,19 @@ void PlayScreen::swapTiles(Tile *tile1, Tile *tile2){
         percentComplete++;
     }
 
-    if(calculatePercent() == 100)
+    //checks if the player won
+    if(calculatePercent() >= 100)
         playerWin();
 }
 
+//update the timer
 void PlayScreen::update()
 {
     int minutes = (++seconds) / 60;
     timerLabel->setText("Time: " + QString::number(minutes) + ":" + QString::number(seconds-(minutes*60)));
 }
 
+//checks if the tile is next to the blank tile and swaps them if it is.
 void PlayScreen::handleTileClick(Tile* t)
 {
     if(timer->isActive())
@@ -220,6 +236,7 @@ void PlayScreen::handleTileClick(Tile* t)
     }
 }
 
+//DEBUG PURPOSES ONLY! displays the win menu so we don't have to solve the puzzle in our presentation.
 void PlayScreen::winButtonClicked()
 {
     qDebug() << "main menu button clicked.";
@@ -227,6 +244,7 @@ void PlayScreen::winButtonClicked()
     wm->display(screenWidth, screenHeight);
 }
 
+//pauses the timer and prevents the user from moving tiles
 void PlayScreen::pauseButtonClicked()
 {
     qDebug() << "pause button clicked.";
@@ -240,6 +258,7 @@ void PlayScreen::pauseButtonClicked()
     }
 }
 
+//takes the user back to the main menu
 void PlayScreen::giveUpButtonClicked()
 {
     MainMenu *mm = new MainMenu(mainWindow, mainWindow);
@@ -248,6 +267,7 @@ void PlayScreen::giveUpButtonClicked()
 
 }
 
+//called if the winning conditions are met. creates a win menu
 void PlayScreen::playerWin()
 {
     qDebug() << "player won.";

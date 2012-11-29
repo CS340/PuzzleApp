@@ -1,6 +1,8 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
+//AUTHORS: Alan Leung, Carlos Lopez
+
 #include "mainwindow.h"
 
 #include <QWidget>

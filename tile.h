@@ -1,8 +1,13 @@
 #ifndef TILE_H
 #define TILE_H
 
+//AUTHORS: Matt Dumford, Anthony Phelps
+
 #include <QPushButton>
 
+
+// tiles are a custom QPushButton that can send a signal with a pointer to
+// themselves when clicked. they also hold their x and y positions in the grid.
 class Tile : public QPushButton
 {
 
@@ -13,12 +18,12 @@ public:
     explicit Tile(const QString &text);
     explicit Tile();
     virtual ~Tile();
-    int getX();
-    int getY();
-    int getInitX();
-    int getInitY();
-    void setX(int a);
-    void setY(int a);
+    int getX(); //get the x position of the tile
+    int getY(); //get the y position of the tile
+    int getInitX(); //get the initial x position of the tile
+    int getInitY(); // get the initial y position of the tile
+    void setX(int a); //set the x position of the tile
+    void setY(int a); //set the y position of the tile
 
 private:
     int x;
@@ -29,11 +34,11 @@ private:
     int initY;
 
 signals:
-    void tileClicked(Tile*);
+    void tileClicked(Tile*); //custom signal emitted whenever the tile
+                             //detects its own clicked()
 
 private slots:
     void onClick(){
-        //qDebug("TILE_CLICK");
         emit tileClicked(this);
     }
 };

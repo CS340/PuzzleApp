@@ -1,6 +1,8 @@
 #ifndef NETWORKPLAYSCREEN_H
 #define NETWORKPLAYSCREEN_H
 
+//AUTHORS: Anthony Phelps
+
 #include "tile.h"
 #include "mainwindow.h"
 

@@ -1,6 +1,8 @@
 #ifndef GRIDSIZESCREEN_H
 #define GRIDSIZESCREEN_H
 
+//AUTHORS: Matt Dumford
+
 #include "playscreen.h"
 #include "mainwindow.h"
 

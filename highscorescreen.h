@@ -1,6 +1,8 @@
 #ifndef HIGHSCORESCREEN_H
 #define HIGHSCORESCREEN_H
 
+//AUTHORS: Anthony Phelps
+
 #include <QWidget>
 #include <QTcpSocket>
 #include <QLabel>
