@@ -31,10 +31,14 @@ public:
     // Note that this will only have an effect on Fremantle.
     void setOrientation(ScreenOrientation orientation);
 
+    QString getUserName();
+    void setUserName(QString name);
+
     void showExpanded();
 
 private:
     Ui::MainWindow *ui;
+    QString userName;
 
 
 private slots:

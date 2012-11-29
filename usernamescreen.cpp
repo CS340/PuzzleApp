@@ -1,4 +1,5 @@
 #include "usernamescreen.h"
+#include "mainmenu.h"
 
 #include <QLineEdit>
 #include <QGridLayout>
@@ -6,13 +7,19 @@
 #include <QPushButton>
 #include <QFont>
 #include <QDebug>
+#include <QFile>
+#include <QDir>
 
-UsernameScreen::UsernameScreen(QWidget *parent) : QWidget(parent)
+UsernameScreen::UsernameScreen(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
+    this->mainWindow = mainWindow;
 }
 
 void UsernameScreen::display(int screenWidth, int screenHeight)
 {
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
+
     QFont font("Helvetica", 13);
     layout = new QGridLayout();
     this->setLayout(layout);
@@ -35,17 +42,31 @@ void UsernameScreen::display(int screenWidth, int screenHeight)
     connect(okButton, SIGNAL(clicked()), this, SLOT(okPushed()));
     connect(lineEdit, SIGNAL(textEdited(QString)), this, SLOT(newText(QString)));
 
+    lineEdit->clearFocus();
     this->show();
 }
 
-//void UsernameScreen::newText(const QString &t)
-//{
-//    text = t;
-//}
+void UsernameScreen::newText(const QString &t)
+{
+    qDebug() << "new text.";
+    text = t;
+}
 
 void UsernameScreen::okPushed()
 {
-//    qDebug() << "OK pushed.";
-//    qDebug() << text;
+    qDebug() << "OK pushed.";
+    qDebug() << text;
 
+    //save text to sdcard/Puzzle Pictures/user.name
+    QFile file(QDir::rootPath().append("/sdcard/Puzzle Pictures/user.name"));
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    out << text;
+    file.close();
+    mainWindow->setUserName(text);
+    qDebug() << "user.name written.";
+
+    //go to main menu
+    MainMenu *mm = new MainMenu(mainWindow, mainWindow);
+    mm->display(screenWidth, screenHeight);
 }

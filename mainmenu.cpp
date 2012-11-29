@@ -112,6 +112,11 @@ void MainMenu::display(int sw, int sh)
     connect(left, SIGNAL(clicked()), this, SLOT(left()));
     connect(right, SIGNAL(clicked()), this, SLOT(right()));
 
+    //username label
+    QLabel *userName = new QLabel(QString("User name: ") + mainWindow->getUserName());
+    userName->setFixedHeight(20);
+    layout->addWidget(userName, 5,0,1,3,Qt::AlignHCenter);
+
     widget1->show();
 }
 

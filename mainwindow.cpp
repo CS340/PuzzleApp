@@ -14,11 +14,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-/*void MainWindow::display(int screenWidth, int screenHeight)
+QString MainWindow::getUserName()
 {
-    //MainMenu *mm = new MainMenu(this);
-    //mm->display(screenWidth, screenHeight);
-}*/
+    return userName;
+}
+
+void MainWindow::setUserName(QString name)
+{
+    userName = name;
+}
 
 void MainWindow::setOrientation(ScreenOrientation orientation)
 {

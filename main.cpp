@@ -5,7 +5,11 @@
 #include "usernamescreen.h"
 
 #include <QApplication>
-#include<QDesktopWidget>
+#include <QDesktopWidget>
+#include <QFile>
+#include <QTextStream>
+#include <QDir>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -21,11 +25,44 @@ int main(int argc, char *argv[])
     mainWindow.resize(screenWidth, screenHeight);
     mainWindow.showExpanded();
 
-//    MainMenu *mm = new MainMenu(&mainWindow, &mainWindow);
-//    mm->display(screenWidth, screenHeight);
+    //open directory to pictures folder
+    QDir dir  = QDir(QDir::rootPath());
+    dir.cd("sdcard");
+    if(!dir.entryList().contains("Puzzle Pictures"))
+        dir.mkdir("Puzzle Pictures");
+    dir.cd("Puzzle Pictures");
 
-    UsernameScreen *uns = new UsernameScreen(&mainWindow);
-    uns->display(screenWidth, screenHeight);
+    //get list of images in pictures folder
+    QStringList files = dir.entryList();
+
+    if(files.contains("user.name"))
+    {
+        QFile file(dir.absolutePath() + "/user.name");
+        QStringList strings;
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QTextStream in(&file);
+            while (!in.atEnd()) {
+                strings += in.readLine().split(";");
+            }
+        }
+
+        mainWindow.setUserName(strings.at(0));
+        qDebug() << mainWindow.getUserName();
+
+        MainMenu *mm = new MainMenu(&mainWindow, &mainWindow);
+        mm->display(screenWidth, screenHeight);
+    }
+
+    else
+    {
+        UsernameScreen *uns = new UsernameScreen(&mainWindow, &mainWindow);
+        uns->display(screenWidth, screenHeight);
+    }
+
+
+
+
 
     return app.exec();
 }
