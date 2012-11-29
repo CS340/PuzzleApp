@@ -1,11 +1,10 @@
 #ifndef HIGHSCORESCREEN_H
 #define HIGHSCORESCREEN_H
 
-<<<<<<< HEAD
+
 //AUTHORS: Anthony Phelps
-=======
+
 #include "mainwindow.h"
->>>>>>> 645c2f367c56e74c8c977f9e9afc6d7b2db22c34
 
 #include <QWidget>
 #include <QTcpSocket>
@@ -22,7 +21,7 @@ private:
     void test();
     void makeCon();
     QString parseResponse(QString s);
-
+    int screenWidth, screenHeight;
     MainWindow *mainWindow;
     QTcpSocket *socket;
     bool all;
@@ -42,6 +41,7 @@ private slots:
     void mineScores();
     void allScores();
     void refresh();
+    void mainMenuButtonClicked();
 };
 
 #endif // HIGHSCORESCREEN_H

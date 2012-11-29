@@ -27,19 +27,14 @@ public:
     void display(int screenWidth, int screenHeight, int gridSize = 5);
 
 private:
-<<<<<<< HEAD
+
     int* findHiddenTile(int x, int y, int hiddenX, int hiddenY); //finds the position if the blank tile relative to another tile
     void swapTiles(Tile *tile1, Tile *tile2); //switch the position of two tiles
     void shuffle(); //shuffle the tiles
     int calculatePercent(); //calculate the percent of the puzzle that is complete
-=======
-    int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
-    void swapTiles(Tile *tile1, Tile *tile2);
-    void shuffle();
-    int calculatePercent();
     void makeCon();
     QString parseResponse(QString s);
->>>>>>> 645c2f367c56e74c8c977f9e9afc6d7b2db22c34
+
 
 
     int screenWidth, screenHeight;

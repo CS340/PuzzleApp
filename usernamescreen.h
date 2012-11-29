@@ -26,29 +26,19 @@ private:
 
     MainWindow *mainWindow;
     int screenWidth, screenHeight;
-<<<<<<< HEAD
     QGridLayout *layout; //holds all sub-widgets
     QString text; //holds the user input
+    QTcpSocket *socket;
     
 signals:
-    
-public slots:
-    void okPushed(); //ok button, saves user name to file and goes to main menu
-    void newText(const QString&); //updates text to whatever is in the QLineEdit
-=======
-    QLineEdit *lineEdit;
-    QGridLayout *layout;
-    QString text;
-    QTcpSocket *socket;
     
 public slots:
     void connected();
     void disconnected();
     void bytesWritten(qint64 bytes);
     void readyRead();
-    void okPushed();
-    void newText(const QString&);
->>>>>>> 645c2f367c56e74c8c977f9e9afc6d7b2db22c34
+    void okPushed(); //ok button, saves user name to file and goes to main menu
+    void newText(const QString&);//updates text to whatever is in the QLineEdit
     
 };
 

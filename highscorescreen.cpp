@@ -1,5 +1,7 @@
 #include "highscorescreen.h"
 #include "mainwindow.h"
+#include "mainmenu.h"
+
 #include <QPushButton>
 #include <QGridLayout>
 #include <QTcpSocket>
@@ -12,8 +14,8 @@ HighscoreScreen::HighscoreScreen(MainWindow *mainWindow, QWidget *parent) : QWid
     this->mainWindow = mainWindow;
     all = false;
     checkNext = false;
-    myScoreString = "<table cellpadding=\"3\" border=\"1\"><tr><th>Please reload this list</th></tr></table>";
-    allScoreString = "<table  cellpadding=\"3\" border=\"1\"><tr><th>Please reload this list</th></tr></table>";
+    myScoreString = "<table cellpadding=\"3\" border=\"1\"><tr><th>Please refresh this list</th></tr></table>";
+    allScoreString = "<table  cellpadding=\"3\" border=\"1\"><tr><th>Please refresh this list</th></tr></table>";
     socket = new QTcpSocket(this);
 
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
@@ -24,21 +26,42 @@ HighscoreScreen::HighscoreScreen(MainWindow *mainWindow, QWidget *parent) : QWid
 
 void HighscoreScreen::display(int screenWidth, int screenHeight)
 {
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
+
+    QFont font("Helvetica", 8);
     QGridLayout *layout = new QGridLayout;
     //this->setFixedSize(screenWidth, screenHeight);
 
     QPushButton *refresh = new QPushButton("Refresh");
 
-    layout->addWidget(refresh,1,0,1,2);
+    layout->addWidget(refresh,2,0,1,2);
 
     connect(refresh, SIGNAL(clicked()), this, SLOT(refresh()));
     //connect(refresh, SIGNAL(clicked()), this, SLOT(allScores()));
 
     allScoreLabel = new QLabel(allScoreString);
     myScoreLabel = new QLabel(myScoreString);
+    allScoreLabel->setFont(font);
+    myScoreLabel->setFont(font);
 
-    layout->addWidget(myScoreLabel,0,0);
-    layout->addWidget(allScoreLabel,0,1);
+    QLabel *local = new QLabel("Local");
+    QLabel *global = new QLabel("Global");
+    local->setFixedHeight(40);
+    global->setFixedHeight(40);
+    local->setFont(font);
+    global->setFont(font);
+    local->setAlignment(Qt::AlignHCenter);
+    global->setAlignment(Qt::AlignHCenter);
+    layout->addWidget(local, 0,0);
+    layout->addWidget(global, 0,1);
+
+    QPushButton *mainMenuButton = new QPushButton("Main Menu");
+    layout->addWidget(mainMenuButton, 3,0,1,2);
+    connect(mainMenuButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
+
+    layout->addWidget(myScoreLabel,1,0);
+    layout->addWidget(allScoreLabel,1,1);
     QWidget *widg = new QWidget;
     widg->setFixedSize(screenWidth, screenHeight);
     widg->setLayout(layout);
@@ -80,6 +103,12 @@ QString HighscoreScreen::parseResponse(QString s)
     }
 
     return result;
+}
+
+void HighscoreScreen::mainMenuButtonClicked()
+{
+    MainMenu *mm = new MainMenu(mainWindow, mainWindow);
+    mm->display(screenWidth, screenHeight);
 }
 
 void HighscoreScreen::makeCon()
