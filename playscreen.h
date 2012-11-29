@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QString>
 #include <QWidget>
+#include <QTcpSocket>
 
 class PlayScreen : public QWidget
 {
@@ -28,6 +29,8 @@ private:
     void swapTiles(Tile *tile1, Tile *tile2);
     void shuffle();
     int calculatePercent();
+    void makeCon();
+    QString parseResponse(QString s);
 
 
     int screenWidth, screenHeight;
@@ -48,6 +51,7 @@ private:
     QLabel *timerLabel;
     QLabel *percentLabel;
     QTimer *timer;
+    QTcpSocket *socket;
 
 private slots:
     void handleTileClick(Tile*);
@@ -56,6 +60,10 @@ private slots:
     void pauseButtonClicked();
     void giveUpButtonClicked();
     void playerWin();
+    void connected();
+    void disconnected();
+    void bytesWritten(qint64 bytes);
+    void readyRead();
 };
 
 #endif // PLAYSCREEN_H

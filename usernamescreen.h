@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include <QGridLayout>
+#include <QTcpSocket>
 
 class UsernameScreen : public QWidget
 {
@@ -15,15 +16,21 @@ public:
     void display(int screenWidth, int screenHeight);
 
 private:
+    void makeCon();
+    QString parseResponse(QString s);
+
     MainWindow *mainWindow;
     int screenWidth, screenHeight;
     QLineEdit *lineEdit;
     QGridLayout *layout;
     QString text;
-    
-signals:
+    QTcpSocket *socket;
     
 public slots:
+    void connected();
+    void disconnected();
+    void bytesWritten(qint64 bytes);
+    void readyRead();
     void okPushed();
     void newText(const QString&);
     

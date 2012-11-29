@@ -33,6 +33,7 @@ private:
     QImage image;
     MainWindow *mainWindow;
     QTcpSocket *socket;
+    QString partner,gameName;
 
     QGraphicsView *gView;
     QGridLayout *layout;
@@ -55,7 +56,6 @@ private slots:
     void handleTileClick(Tile*);
     void update();
     void mainMenuButtonClicked();
-    void pauseButtonClicked();
     void giveUpButtonClicked();
     void playerWin();
     void connected();
