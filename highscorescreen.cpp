@@ -114,7 +114,7 @@ void HighscoreScreen::mainMenuButtonClicked()
 void HighscoreScreen::makeCon()
 {
     qDebug() << "Connecting...";
-    socket->connectToHost("10.107.206.194", 4848);
+    socket->connectToHost("ganymede.sytes.net", 4848);
     if(!socket->waitForConnected(1000))
     {
         qDebug() << "ERROR: " << socket->errorString();
