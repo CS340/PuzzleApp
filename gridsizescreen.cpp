@@ -4,6 +4,8 @@
 #include <QFont>
 #include <QDebug>
 
+// The grid size screen is used to get a size for the singleplayer play grid
+// it uses 8 qpushbuttons with the respective grid size
 GridSizeScreen::GridSizeScreen(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     this->mainWindow = mainWindow;
@@ -20,6 +22,7 @@ void GridSizeScreen::display(int screenWidth, int screenHeight)
     this->screenWidth = screenWidth;
     this->screenHeight = screenHeight;
 
+    //make the layout and a label for instructions
     this->resize(screenWidth, screenHeight);
     QGridLayout *layout = new QGridLayout(this);
     this->setLayout(layout);
@@ -28,6 +31,7 @@ void GridSizeScreen::display(int screenWidth, int screenHeight)
     label->setFont(font);
     layout->addWidget(label,0,0,1,2);
 
+    //make the buttons
     QPushButton *b3 = new QPushButton("3X3");
     QPushButton *b4 = new QPushButton("4X4");
     QPushButton *b5 = new QPushButton("5X5");
@@ -37,6 +41,7 @@ void GridSizeScreen::display(int screenWidth, int screenHeight)
     QPushButton *b9 = new QPushButton("9X9");
     QPushButton *b10 = new QPushButton("10X10");
 
+    //set the fonts for the buttons
     b3->setFont(font);
     b4->setFont(font);
     b5->setFont(font);
@@ -46,6 +51,7 @@ void GridSizeScreen::display(int screenWidth, int screenHeight)
     b9->setFont(font);
     b10->setFont(font);
 
+    //resize the buttons
     b3->setFixedHeight(screenHeight/5);
     b4->setFixedHeight(screenHeight/5);
     b5->setFixedHeight(screenHeight/5);
@@ -55,6 +61,7 @@ void GridSizeScreen::display(int screenWidth, int screenHeight)
     b9->setFixedHeight(screenHeight/5);
     b10->setFixedHeight(screenHeight/5);
 
+    //add the buttons to the layout
     layout->addWidget(b3, 1,0);
     layout->addWidget(b4, 1,1);
     layout->addWidget(b5, 2,0);
@@ -64,6 +71,7 @@ void GridSizeScreen::display(int screenWidth, int screenHeight)
     layout->addWidget(b9, 4,0);
     layout->addWidget(b10, 4,1);
 
+    //connect the buttons to their slots
     connect(b3, SIGNAL(clicked()), this, SLOT(b3Pushed()));
     connect(b4, SIGNAL(clicked()), this, SLOT(b4Pushed()));
     connect(b5, SIGNAL(clicked()), this, SLOT(b5Pushed()));

@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QDebug>
 
+// the win menu is displayed when you win the game. It shows an animated .gif
+// and has buttons to go back to the main menu and to quit the app.
 win_menu::win_menu(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     this->mainWindow = mainWindow;

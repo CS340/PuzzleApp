@@ -20,11 +20,13 @@ int main(int argc, char *argv[])
     int screenWidth = desktop->width();
     int screenHeight = desktop->height();
 
+    //create main window
     MainWindow mainWindow;
     mainWindow.setOrientation(MainWindow::ScreenOrientationLockPortrait);
     mainWindow.resize(screenWidth, screenHeight);
     mainWindow.showExpanded();
 
+    //check if there is already a username
     //open directory to pictures folder
     QDir dir  = QDir(QDir::rootPath());
     dir.cd("sdcard");
@@ -32,9 +34,10 @@ int main(int argc, char *argv[])
         dir.mkdir("Puzzle Pictures");
     dir.cd("Puzzle Pictures");
 
-    //get list of images in pictures folder
+    //get list of files in pictures folder
     QStringList files = dir.entryList();
 
+    //if there is already a username, give it to the main window and create a main menu
     if(files.contains("user.name"))
     {
         QFile file(dir.absolutePath() + "/user.name");
@@ -54,6 +57,7 @@ int main(int argc, char *argv[])
         mm->display(screenWidth, screenHeight);
     }
 
+    //if there is no username, make a username screen and get one
     else
     {
         UsernameScreen *uns = new UsernameScreen(&mainWindow, &mainWindow);

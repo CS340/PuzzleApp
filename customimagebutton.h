@@ -5,6 +5,8 @@
 
 #include <QPushButton>
 
+// the customImageButton is used the exact same way as a QPushButton, but it can keep track of the
+// filepath for the image displayed. It sends a signal with this filepath when it is clicked.
 class customImageButton : public QPushButton
 {
 
@@ -14,17 +16,17 @@ public:
    explicit customImageButton(QString p, const QIcon &icon, QWidget *parent = 0);
    explicit customImageButton();
    virtual ~customImageButton();
-   QString getPath();
+   QString getPath(); //getter for the filepath
 
 private:
-   QString path;
+   QString path; //the filepath for the image displayed on the button
 
 signals:
-   void customImageButtonClicked(QString);
+   void customImageButtonClicked(QString); //sends the filepath for the image for this button
 
 private slots:
+   //detects its own signal from qpushbutton and sends its own custom signal
    void onClick(){
-       //qDebug("CUSTOMIMAGEBUTTON_CLICK");
        emit customImageButtonClicked(path);
    }
 };

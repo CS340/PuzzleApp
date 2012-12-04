@@ -31,6 +31,7 @@ public:
     // Note that this will only have an effect on Fremantle.
     void setOrientation(ScreenOrientation orientation);
 
+    //getter and setter for user name so all sub-menus/screens have access
     QString getUserName();
     void setUserName(QString name);
 

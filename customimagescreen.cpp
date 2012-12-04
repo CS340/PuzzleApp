@@ -10,6 +10,11 @@
 #include <QLabel>
 #include <QDebug>
 
+// the custom image screen allows the user to choose an image to play with from their sd card.
+// it uses a QDir object to navigate to a predetermined folder and grab all of the filepaths
+// for the images it finds. it uses custom image buttons to send the filepath for the chosen image
+// back to the main menu. A QScrollArea is used for the scrolling, but due to qt limitations,
+// two fingers must be used.
 CustomImageScreen::CustomImageScreen(MainMenu *mm, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     mainMenu = mm;
@@ -66,19 +71,24 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
         //create buttons and put in grid
         for(int i=0; i<files.size()/3; i++){
             for(int j=0; j<3; j++){
+                //set up filepath
                 QString path(dir.absolutePath() + "/" + files[i*3+j]);
                 QImageReader reader(path);
+
+                //set up image
                 reader.setScaledSize(QSize(screenWidth/3-1, screenHeight/5-1));
                 QImage pic = reader.read();
                 int picWidth = pic.width();
                 int picHeight = pic.height();
 
+                //create button
                 QPixmap pixmap = QPixmap::fromImage(pic);
                 QIcon icon(pixmap);
                 customImageButton *button = new customImageButton(path, icon);
+                button->setIconSize(QSize(picWidth, picHeight));
                 connect(button, SIGNAL(customImageButtonClicked(QString)), this, SLOT(customImageChosen(QString)));
 
-                button->setIconSize(QSize(picWidth, picHeight));
+                //add button to the layout
                 pics->addWidget(button,i,j);
             }
         }
@@ -95,6 +105,7 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
 
     }
 
+    //if there are no images in the folder, display a label showing that there are none
     else
     {
         QLabel *noPicWarning = new QLabel("No Pictures Detected\nTo use custom images, add them to\n \"/sdcard/Puzzle Pictures\"");
@@ -102,6 +113,7 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
 
     }
 
+    //resize layout rows
     for(int i=0; i<5; i++)
         layout->setRowMinimumHeight(i, screenHeight/5);
 
@@ -115,6 +127,7 @@ void CustomImageScreen::display(int screenWidth, int screenHeight)
     this->show();
 }
 
+//recieves filepath from pushed customimagebutton and sends it to main menu
 void CustomImageScreen::customImageChosen(QString path)
 {
     qDebug() << "custom image chosen";

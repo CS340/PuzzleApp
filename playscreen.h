@@ -60,6 +60,8 @@ private slots:
     void pauseButtonClicked();
     void giveUpButtonClicked();
     void playerWin();
+
+    //for uploading highscores
     void connected();
     void disconnected();
     void bytesWritten(qint64 bytes);

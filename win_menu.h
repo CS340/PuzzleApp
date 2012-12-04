@@ -10,6 +10,8 @@
 #include <QMovie>
 #include <QLabel>
 
+// the win menu is displayed when you win the game. It shows an animated .gif
+// and has buttons to go back to the main menu and to quit the app.
 class win_menu : public QWidget
 {
     Q_OBJECT

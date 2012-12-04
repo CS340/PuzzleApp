@@ -11,20 +11,22 @@
 #include <QLabel>
 #include <QGridLayout>
 
+// The main menu keeps track of all default images to choose from and handles switching between them
+// it also has buttons to go to all other screens.
 class MainMenu : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MainMenu(MainWindow *mainWindow, QWidget *parent = 0);
-    explicit MainMenu(QString path, MainWindow *mainWindow, QWidget *parent = 0);
+    explicit MainMenu(MainWindow *mainWindow, QWidget *parent = 0); //no custom image
+    explicit MainMenu(QString path, MainWindow *mainWindow, QWidget *parent = 0); //custom image
     void display(int sw, int sh);
 
 private:
     int screenHeight;
     int screenWidth;
-    int pathsIndex;
+    int pathsIndex; //holds the index of the currently displayed picture in the vector of images
     QLabel *imageLabel;
-    std::vector<QString> paths;
+    std::vector<QString> paths; //vector of filepaths to all images in the rotation
     QGridLayout *layout;
     int gridSize;
     MainWindow *mainWindow;
@@ -32,13 +34,13 @@ private:
 signals:
     
 public slots:
-    void makeGame();
-    void makeMultiplayerGame();
-    void makeHighscore();
+    void makeGame(); //singleplayer
+    void makeMultiplayerGame(); //multiplayer
+    void makeHighscore(); //highscores
     void customImage();
-    void cancel();
-    void left();
-    void right();
+    void cancel(); //cancel slot for custom image screen
+    void left(); //left arrow
+    void right(); //right arrow
     
 };
 

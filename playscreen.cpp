@@ -294,6 +294,7 @@ void PlayScreen::makeCon()
     }
 }
 
+//uploading high scores
 void PlayScreen::connected()
 {
     qDebug() << "Connected";
