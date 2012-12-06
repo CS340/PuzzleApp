@@ -15,6 +15,12 @@
 #include <QWidget>
 #include <QTcpSocket>
 
+// the networkplayScreen is the screen for the multi-player game.
+// it takes in the file path to the image the user wants to use
+// and cuts it up into tiles and displays them on the screen with various
+// menu buttons and statistics. It also handles tile clicks and tile swapping.
+// It is nearly identical to the single player screen except it sends and recives
+// player actions over the network
 class NetworkPlayScreen : public QWidget
 {
     Q_OBJECT
@@ -23,15 +29,15 @@ public:
     void display(int screenWidth, int screenHeight, int gridSize = 5);
 
 private:
-    int* findHiddenTile(int x, int y, int hiddenX, int hiddenY);
-    void swapTiles(Tile *tile1, Tile *tile2);
-    void shuffle();
-    int calculatePercent();
+    int* findHiddenTile(int x, int y, int hiddenX, int hiddenY); //finds the position if the blank tile relative to another tile
+    void swapTiles(Tile *tile1, Tile *tile2); //switch the position of two tiles
+    void shuffle();  //shuffle the tiles
+    int calculatePercent(); //calculate the percent of the puzzle that is complete
     QString parseResponse(QString s);
     void makeCon();
 
     int screenWidth, screenHeight;
-    QString imgPath;
+    QString imgPath; //file path to the user's chosen image
     QImage image;
     MainWindow *mainWindow;
     QTcpSocket *socket;
@@ -39,7 +45,7 @@ private:
 
     QGraphicsView *gView;
     QGridLayout *layout;
-    QGridLayout *playGrid;
+    QGridLayout *playGrid; //grid of tiles
     QGridLayout *menuGrid;
 
     Tile *hiddenTile;
@@ -59,7 +65,7 @@ signals:
 
 private slots:
     void handleTileClick(Tile*);
-    void update();
+    void update(); //update the timer
     void mainMenuButtonClicked();
     void giveUpButtonClicked();
     void playerWin();

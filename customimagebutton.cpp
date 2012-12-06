@@ -1,3 +1,5 @@
+//AUTHOR: Matt Dumford
+
 #include "customimagebutton.h"
 
 // the customImageButton is used the exact same way as a QPushButton, but it can keep track of the

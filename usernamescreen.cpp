@@ -1,3 +1,5 @@
+//AUTHORS: Matt Dumford, Anthony Phelps
+
 #include "usernamescreen.h"
 #include "mainmenu.h"
 

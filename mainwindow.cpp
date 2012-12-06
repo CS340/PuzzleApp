@@ -1,3 +1,4 @@
+//AUTHORS: Anthony Phelps, Matt Dumford
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "playscreen.h"

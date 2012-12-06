@@ -1,3 +1,5 @@
+//AUTHORS: Matt Dumford, Anthony Phelps
+
 #include "playscreen.h"
 #include "tile.h"
 #include "win_menu.h"

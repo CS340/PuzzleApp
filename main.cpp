@@ -1,3 +1,5 @@
+//AUTHORS: Matt Dumford, Anthony Phelps
+
 #include "mainwindow.h"
 #include "mainmenu.h"
 #include "win_menu.h"

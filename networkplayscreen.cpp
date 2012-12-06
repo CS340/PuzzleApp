@@ -1,3 +1,5 @@
+//AUTHORS: Anthony Phelps
+
 #include "networkplayscreen.h"
 #include "tile.h"
 #include "win_menu.h"
@@ -10,6 +12,13 @@
 #include <QTimer>
 #include <math.h>
 #include <QDebug>
+
+// the networkplayScreen is the screen for the multi-player game.
+// it takes in the file path to the image the user wants to use
+// and cuts it up into tiles and displays them on the screen with various
+// menu buttons and statistics. It also handles tile clicks and tile swapping.
+// It is nearly identical to the single player screen except it sends and recives
+// player actions over the network
 
 NetworkPlayScreen::NetworkPlayScreen(QString imgPath, MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
@@ -26,6 +35,7 @@ NetworkPlayScreen::NetworkPlayScreen(QString imgPath, MainWindow *mainWindow, QW
 
 }
 
+//create all sub-widgets and display everything
 void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 {
     makeCon();;
@@ -125,11 +135,13 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
 
     shuffle();
 
+    //checks if the shuffle resulted in a winning board
     if(percentComplete == grid*grid)
     {
         playerWin();
     }
 
+    //create and set up the timer
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 
@@ -138,6 +150,7 @@ void NetworkPlayScreen::display(int screenWidth, int screenHeight, int gridSize)
     gView->show();
 }
 
+//calculate the percent of the puzzle that is complete
 int NetworkPlayScreen::calculatePercent()
 {
     if(percentComplete == 0)
@@ -147,6 +160,7 @@ int NetworkPlayScreen::calculatePercent()
     return (int)(100.00 * ((float)percentComplete/(float)(grid*grid))) + 1;
 }
 
+//shuffles the tiles into random positions
 void NetworkPlayScreen::shuffle()
 {
     for(int i = 0; i < grid; i++)
@@ -173,6 +187,7 @@ void NetworkPlayScreen::shuffle()
     }
 }
 
+//swaps the positions of two tiles
 void NetworkPlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     playGrid->removeWidget(tile1);
     playGrid->removeWidget(tile2);
@@ -182,6 +197,7 @@ void NetworkPlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     int x2start = tile2->getX();
     int y2start = tile2->getY();
 
+    //swap the tiles
     playGrid->addWidget(tile1, y2start, x2start);
     playGrid->addWidget(tile2, y1start, x1start);
 
@@ -190,6 +206,7 @@ void NetworkPlayScreen::swapTiles(Tile *tile1, Tile *tile2){
     tile2->setX(x1start);
     tile2->setY(y1start);
 
+    //update the stats for tiles in the correct positions
     if(x1start == tile1->getInitX() && y1start == tile1->getInitY())
     {
         percentComplete--;
@@ -208,27 +225,29 @@ void NetworkPlayScreen::swapTiles(Tile *tile1, Tile *tile2){
         percentComplete++;
     }
 
+    //checks if the player won
     if(calculatePercent() == 100)
     {
         playerWin();
     }
 }
 
+//update the timer
 void NetworkPlayScreen::update()
 {
     int minutes = (++seconds) / 60;
     timerLabel->setText("Time: " + QString::number(minutes) + ":" + QString::number(seconds-(minutes*60)));
 }
 
+//checks if the tile is next to the blank tile and swaps them if it is. Alerts opponent that player moved a tile.
 void NetworkPlayScreen::handleTileClick(Tile* t)
 {
     if((t->getX()-1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()-1 == hiddenTile->getY()) || (t->getX()+1 == hiddenTile->getX() && t->getY() == hiddenTile->getY()) || (t->getX() == hiddenTile->getX() && t->getY()+1 == hiddenTile->getY()))
     {
         if(timer->isActive())
         {
-            //qDebug("BEFORE :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
+
             swapTiles(t, hiddenTile);
-            //qDebug("AFTER :: T:(%d, %d) H:(%d,%d)", t->getX(), t->getY(), hiddenTile->getX(), hiddenTile->getY());
             movesLabel->setText("Moves: " + QString::number(++numMoves));
             percentLabel->setText("Percent: " + QString::number(calculatePercent()) + "%");
             qDebug() << (int)(10000 - ((log(seconds)-log(1))/(log(1000)-log(1)) + (log(numMoves)-log(1))/(log(1000)-log(1)))*1000);
@@ -236,7 +255,7 @@ void NetworkPlayScreen::handleTileClick(Tile* t)
         }
     }
 }
-
+//DEBUG PURPOSES ONLY! displays the win menu so we don't have to solve the puzzle in our presentation.
 void NetworkPlayScreen::mainMenuButtonClicked()
 {
     qDebug() << "main menu button clicked.";
@@ -245,31 +264,16 @@ void NetworkPlayScreen::mainMenuButtonClicked()
     wm->display(screenWidth, screenHeight);
 }
 
-void NetworkPlayScreen::giveUpButtonClicked()//<-------------------------------------------------------------FIX THIS
+//takes the user back to the main menu. Alerts opponent that this player quit.
+void NetworkPlayScreen::giveUpButtonClicked()
 {
-//    delete gView;
-//    qDebug() << "give up button clicked.";
-//    QWidget *loseScreen = new QWidget(this);
-//    QGridLayout *loseLayout = new QGridLayout();
-//    loseScreen->setLayout(loseLayout);
-
-//    QLabel *imgLabel = new QLabel();
-//    imgLabel->setPixmap(QPixmap::fromImage(image));
-//    loseLayout->addWidget(imgLabel, 0, 0);
-
-//    QPushButton *mmButton = new QPushButton();
-//    loseLayout->addWidget(mmButton, 1, 0);
-//    connect(mmButton, SIGNAL(clicked()), this, SLOT(mainMenuButtonClicked()));
-
-//    loseScreen->show();
-//    loseScreen->raise();
-
+    socket->write(QString("quit:" + mainWindow->getUserName() + ":" + gameName).toUtf8());
     MainMenu *mm = new MainMenu(mainWindow, mainWindow);
     mm->display(screenWidth, screenHeight);
     mm->raise();
-
 }
 
+//called if the winning conditions are met. creates a win menu. Alerts opponent that this user has won.
 void NetworkPlayScreen::playerWin()
 {
     qDebug() << "player won.";
@@ -278,6 +282,7 @@ void NetworkPlayScreen::playerWin()
     wm->display(screenWidth, screenHeight);
 }
 
+//Initializes socket connection
 void NetworkPlayScreen::makeCon()
 {
     qDebug() << "Connecting...";
@@ -289,22 +294,26 @@ void NetworkPlayScreen::makeCon()
     }
 }
 
+//Parses server messages and acts upon them
 QString NetworkPlayScreen::parseResponse(QString s)
 {
     QStringList parts = s.split(":");
     QString result;
+    //Game partner assigned
     if(parts[0] == "partner")
     {
         partner = parts[1];
         gameName = parts[2];
         timer->start(1000);
     }
+    //Oppenent made a move
     else if (parts[0] == "move")
     {
         qDebug() << parts[2] << "::" << parts[3];
         opMovesLabel->setText(parts[3]);
         opPercentLabel->setText(parts[2] + QString("%"));
     }
+    //Opponent won
     else if (parts[0] == "finished")
     {
         qDebug() << "finished";
@@ -313,11 +322,21 @@ QString NetworkPlayScreen::parseResponse(QString s)
         opPercentLabel->setText("lose");
         movesLabel->setText("You");
         percentLabel->setText("lose");
-
+    }
+    //opponent gave up
+    else if (parts[0] == "quit")
+    {
+        qDebug() << "Quit";
+        timer->stop();
+        opMovesLabel->setText("Opponent");
+        opPercentLabel->setText("Quit");
+        movesLabel->setText("Opponent");
+        percentLabel->setText("Quit");
     }
     return result;
 }
 
+//tells server players name
 void NetworkPlayScreen::connected()
 {
     qDebug() << "Connected";
@@ -325,16 +344,19 @@ void NetworkPlayScreen::connected()
 
 }
 
+//run when connection disconnects. Here for debugging only
 void NetworkPlayScreen::disconnected()
 {
     qDebug() << "Disconnected";
 }
 
+//run when bytes are written over the socket. Here for debugging only.
 void NetworkPlayScreen::bytesWritten(qint64 bytes)
 {
     qDebug() << "Wrote Something: " << bytes << "bytes";
 }
 
+//indicates socket is ready to be written to. Does so.
 void NetworkPlayScreen::readyRead()
 {
     qDebug() << "Reading...";

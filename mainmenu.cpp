@@ -1,3 +1,5 @@
+//AUTHORS: Alan Leung, Carlos Lopez
+
 #include "mainmenu.h"
 #include "playscreen.h"
 #include "highscorescreen.h"

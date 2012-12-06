@@ -1,3 +1,5 @@
+//AUTHORS: Matt Dumford
+
 #include "gridsizescreen.h"
 #include "playscreen.h"
 

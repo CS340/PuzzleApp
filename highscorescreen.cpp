@@ -1,3 +1,5 @@
+//AUTHORS: Anthony Phelps
+
 #include "highscorescreen.h"
 #include "mainwindow.h"
 #include "mainmenu.h"
@@ -9,6 +11,11 @@
 #include <QLabel>
 #include <QWidget>
 
+// Makes a connection to the highscore server.
+// Uses the user's username to gather a list of their
+// top ten scores and the global top ten scores.
+
+//Sets up screen with empty tables that tell the user to refresh should nothing appear in the tables.
 HighscoreScreen::HighscoreScreen(MainWindow *mainWindow, QWidget *parent) : QWidget(parent)
 {
     this->mainWindow = mainWindow;
@@ -24,6 +31,7 @@ HighscoreScreen::HighscoreScreen(MainWindow *mainWindow, QWidget *parent) : QWid
     connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
 }
 
+//Display the screen
 void HighscoreScreen::display(int screenWidth, int screenHeight)
 {
     this->screenWidth = screenWidth;
@@ -31,14 +39,12 @@ void HighscoreScreen::display(int screenWidth, int screenHeight)
 
     QFont font("Helvetica", 8);
     QGridLayout *layout = new QGridLayout;
-    //this->setFixedSize(screenWidth, screenHeight);
 
     QPushButton *refresh = new QPushButton("Refresh");
 
     layout->addWidget(refresh,2,0,1,2);
 
     connect(refresh, SIGNAL(clicked()), this, SLOT(refresh()));
-    //connect(refresh, SIGNAL(clicked()), this, SLOT(allScores()));
 
     allScoreLabel = new QLabel(allScoreString);
     myScoreLabel = new QLabel(myScoreString);
@@ -72,6 +78,7 @@ void HighscoreScreen::display(int screenWidth, int screenHeight)
 
 }
 
+//Parse out the response from the server
 QString HighscoreScreen::parseResponse(QString s)
 {
     QStringList parts = s.split(":");
@@ -111,6 +118,7 @@ void HighscoreScreen::mainMenuButtonClicked()
     mm->display(screenWidth, screenHeight);
 }
 
+//Establish connection to the server.
 void HighscoreScreen::makeCon()
 {
     qDebug() << "Connecting...";
@@ -121,6 +129,7 @@ void HighscoreScreen::makeCon()
     }
 }
 
+//Run when connection is established
 void HighscoreScreen::connected()
 {
     qDebug() << "Connected";
@@ -134,6 +143,7 @@ void HighscoreScreen::connected()
     }
 }
 
+//Run when connection closes.
 void HighscoreScreen::disconnected()
 {
     qDebug() << "Disconnected";
@@ -148,29 +158,34 @@ void HighscoreScreen::disconnected()
     checkNext = !checkNext;
 }
 
+//Run when bytes have been written over the socket.
 void HighscoreScreen::bytesWritten(qint64 bytes)
 {
     qDebug() << "Wrote Something: " << bytes << "bytes";
 }
 
+//Run when connection can be read from.
 void HighscoreScreen::readyRead()
 {
     qDebug() << "Reading...";
     parseResponse(socket->readLine(1024));
 }
 
+//Refreshes personal user scores
 void HighscoreScreen::mineScores()
 {
     all=false;
     makeCon();
 }
 
+//Refreshes gloabl scores
 void HighscoreScreen::allScores()
 {
     all = true;
     makeCon();
 }
 
+//Refreshes both of the above
 void HighscoreScreen::refresh()
 {
     checkNext = true;

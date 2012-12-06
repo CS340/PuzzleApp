@@ -1,3 +1,5 @@
+//AUTHORS: Matt Dumford, Anthony Phelps
+
 #include "tile.h"
 
 // tiles are a custom QPushButton that can send a signal with a pointer to

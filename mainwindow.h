@@ -1,3 +1,4 @@
+//AUTHORS: Anthony Phelps, Matt Dumford
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 

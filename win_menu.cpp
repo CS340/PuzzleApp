@@ -1,3 +1,5 @@
+//AUTHORS: Alan Leung, Matt Dumford
+
 #include "win_menu.h"
 #include "mainmenu.h"
 

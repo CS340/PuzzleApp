@@ -1,3 +1,5 @@
+//AUTHOR: Matt Dumford
+
 #include "customimagescreen.h"
 #include "customimagebutton.h"
 #include "mainmenu.h"
